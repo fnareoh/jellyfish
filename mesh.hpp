@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iomanip>
+#include <iostream>
 #include <set>
 #include <tuple>
 
@@ -32,6 +34,9 @@ public:
 
     /** Adds a new triangle into the mesh */
     int insert(const Point3 a, const Point3 b, const Point3 c);
+
+    /** Output the mesh as a list of triangles */
+    std::ostream& operator<<(std::ostream& stream) const;
 
 private:
     std::set<Point3> points;

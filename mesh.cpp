@@ -1,6 +1,22 @@
 #include "mesh.hpp"
 
 
+double filter_double(const double x)
+{
+    long long x_cpy = x * 1e6;
+    return ((double) x_cpy) * 1e-6;
+}
+
+Point3 filter_point(const Point3 p)
+{
+    Point3 p_cpy;
+    std::get<0>(p_cpy) = filter_double(std::get<0>(p));
+    std::get<1>(p_cpy) = filter_double(std::get<1>(p));
+    std::get<2>(p_cpy) = filter_double(std::get<2>(p));
+    return p_cpy;
+}
+
+
 bool MeshCmp::operator()(const MeshFace &a, const MeshFace &b) const
 {
     Point3 a1 = *std::get<0>(a);
@@ -20,21 +36,6 @@ bool MeshCmp::operator()(const MeshFace &a, const MeshFace &b) const
     return false;
 }
 
-
-double filter_double(const double x)
-{
-    long long x_cpy = x * 1e6;
-    return ((double) x_cpy) * 1e-6;
-}
-
-Point3 filter_point(const Point3 p)
-{
-    Point3 p_cpy;
-    std::get<0>(p_cpy) = filter_double(std::get<0>(p));
-    std::get<1>(p_cpy) = filter_double(std::get<1>(p));
-    std::get<2>(p_cpy) = filter_double(std::get<2>(p));
-    return p_cpy;
-}
 
 int Mesh::insert(const Point3 a, const Point3 b, const Point3 c)
 {
@@ -64,4 +65,25 @@ int Mesh::insert(const Point3 a, const Point3 b, const Point3 c)
     // Insert the face
     faces.insert({iter_a, iter_b, iter_c});
     return created_points_count;
+}
+
+std::ostream& Mesh::operator<<(std::ostream& stream) const
+{
+    stream << points.size() << " vertices" << std::endl;
+    stream << faces.size() << " faces" << std::endl;
+
+    for (const auto& face: faces) {
+        double x1, y1, z1, x2, y2, z2, x3, y3, z3;
+
+        std::tie(x1, y1, z1) = * std::get<0>(face);
+        std::tie(x2, y2, z2) = * std::get<1>(face);
+        std::tie(x3, y3, z3) = * std::get<2>(face);
+
+        stream << std::setprecision(6)
+               << x1 << ' ' << y1 << ' ' << z1 << ' '
+               << x2 << ' ' << y2 << ' ' << z2 << ' '
+               << x3 << ' ' << y3 << ' ' << z3 << std::endl;
+    }
+
+    return stream;
 }
