@@ -52,13 +52,9 @@ int Mesh::insert(const Point3 a, const Point3 b, const Point3 c)
     std::tie(iter_b, inserted_b) = points.insert(b_cpy);
     std::tie(iter_c, inserted_c) = points.insert(c_cpy);
 
-    // Check if new points have been created and that the triangle has a
-    // non-empty area.
     int created_points_count = inserted_a + inserted_b + inserted_c;
 
-    if (created_points_count == 0)
-        return created_points_count;
-
+    // Check that the triangle has a non-empty area.
     if (iter_a == iter_b || iter_b == iter_c || iter_c == iter_a)
         return created_points_count;
 
@@ -67,12 +63,12 @@ int Mesh::insert(const Point3 a, const Point3 b, const Point3 c)
     return created_points_count;
 }
 
-std::ostream& Mesh::operator<<(std::ostream& stream) const
+std::ostream& operator<<(std::ostream& stream, const Mesh& mesh)
 {
-    stream << points.size() << " vertices" << std::endl;
-    stream << faces.size() << " faces" << std::endl;
+    stream << mesh.points.size() << " vertices" << std::endl;
+    stream << mesh.faces.size() << " faces" << std::endl;
 
-    for (const auto& face: faces) {
+    for (const auto& face: mesh.faces) {
         double x1, y1, z1, x2, y2, z2, x3, y3, z3;
 
         std::tie(x1, y1, z1) = * std::get<0>(face);
