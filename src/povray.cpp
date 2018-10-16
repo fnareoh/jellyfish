@@ -26,5 +26,6 @@ void povray_output(std::ostream& stream, const Mesh& mesh)
     for (const auto& face: mesh.faces)
         povray_face_output(stream, face);
 
+    stream << "  /** :PROPERTIES: **/" << std::endl;
     stream << '}' << std::endl;
 }

@@ -37,10 +37,13 @@ WARNINGS = $(SRC:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.w)
 # Executable name
 EXEC = jellyfish
 
+# Directory holding scene files
+SCENE_DIR = scene
+
 # ==================================================================================================
 # Configuration
 
-.PHONY: all release debug
+.PHONY: all release debug scene
 
 # ==================================================================================================
 # Main targets
@@ -52,6 +55,8 @@ release: CFLAGS += -O3 -DNDEBUG
 release: $(EXEC)
 
 all: release
+
+scene: scene.png
 
 # ==================================================================================================
 # Main rules
@@ -88,12 +93,30 @@ $(BUILD_DIR)/%.w: $(SRC_DIR)/%.cpp
 	$(CXX) -c $< $(CFLAGS) $(WFLAGS)
 
 # ==================================================================================================
+# Put the scene files together and render the scene
+
+$(SCENE_DIR)/build/jellyfish.pov: $(EXEC)
+	@mkdir -p $(dir $@)
+	./$(EXEC) > $@
+	@sed -i -e '/:PROPERTIES:/r $(SCENE_DIR)/jellyfish_properties.pov' $@
+
+$(SCENE_DIR)/build/scene.pov: $(SCENE_DIR)/scene.pov $(SCENE_DIR)/build/jellyfish.pov
+	@mkdir -p $(dir $@)
+	@cp $(SCENE_DIR)/scene.pov $@
+	@sed -i -e '/:JELLYFISH:/r $(SCENE_DIR)/build/jellyfish.pov' $@
+
+scene.png: $(SCENE_DIR)/build/scene.pov
+	povray Output_File_Name=$@ $(SCENE_DIR)/build/scene.pov
+
+# ==================================================================================================
 # Clean intermediate files (not final results like executables, documentation, packages,...)
 clean:
 	rm -rf $(BUILD_DIR)
 	rm -rf $(DEP_DIR)
+	rm -rf $(SCENE_DIR)/build
 	rm -rf *~
 
 # Clean everything
 clean-all: clean
 	rm -rf $(EXEC)
+	rm -rf scene.png
