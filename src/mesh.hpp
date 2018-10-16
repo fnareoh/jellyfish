@@ -39,7 +39,8 @@ public:
     friend std::ostream& operator<<(std::ostream&, const Mesh&);
 
     /** Output the mesh for povray */
-    friend void povray_output(std::ostream&, const Mesh&);
+    friend void povray_output_mesh(std::ostream&, const Mesh&);
+    friend void povray_output_mesh2(std::ostream&, const Mesh&);
 
 private:
     std::set<Point3> points;

@@ -2,12 +2,13 @@
 
 #include <iomanip>
 #include <iostream>
+#include <map>
 
 #include "mesh.hpp"
 
 
-/** Output a face as povray format */
-void povray_face_output(std::ostream& stream, const MeshFace& face);
-
 /** Outputs a mesh as a povray mesh format */
-void povray_output(std::ostream& stream, const Mesh& mesh);
+void povray_output_mesh(std::ostream& stream, const Mesh& mesh);
+
+/** Outputs a mesh as a povray mesh2 format */
+void povray_output_mesh2(std::ostream& stream, const Mesh& mesh);

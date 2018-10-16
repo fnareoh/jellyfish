@@ -95,7 +95,7 @@ $(BUILD_DIR)/%.w: $(SRC_DIR)/%.cpp
 # ==================================================================================================
 # Put the scene files together and render the scene
 
-$(SCENE_DIR)/build/jellyfish.pov: $(EXEC)
+$(SCENE_DIR)/build/jellyfish.pov: $(EXEC) $(SCENE_DIR)/jellyfish_properties.pov
 	@mkdir -p $(dir $@)
 	./$(EXEC) > $@
 	@sed -i -e '/:PROPERTIES:/r $(SCENE_DIR)/jellyfish_properties.pov' $@

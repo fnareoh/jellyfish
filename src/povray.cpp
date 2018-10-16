@@ -1,7 +1,7 @@
 #include "povray.hpp"
 
 
-void povray_face_output(std::ostream& stream, const MeshFace& face)
+void povray_face_output_mesh(std::ostream& stream, const MeshFace& face)
 {
     stream << "  triangle { ";
 
@@ -19,13 +19,63 @@ void povray_face_output(std::ostream& stream, const MeshFace& face)
     stream << " }" << std::endl;
 }
 
-void povray_output(std::ostream& stream, const Mesh& mesh)
+void povray_output_mesh(std::ostream& stream, const Mesh& mesh)
 {
     stream << "mesh {" << std::endl;
 
     for (const auto& face: mesh.faces)
-        povray_face_output(stream, face);
+        povray_face_output_mesh(stream, face);
 
+    stream << "  /** :PROPERTIES: **/" << std::endl;
+    stream << '}' << std::endl;
+}
+
+void povray_output_mesh2(std::ostream& stream, const Mesh& mesh)
+{
+    stream << "mesh2 {" << std::endl;
+
+    stream << "  vertex_vectors {" << std::endl;
+    stream << "    " << mesh.points.size() << "," << std::endl;
+    stream << "    ";
+
+    // Output and index vertices
+    std::map<Point3, size_t> point_index;
+    size_t point_counter = 0;
+
+    for (const Point3& point: mesh.points) {
+        int x, y, z;
+        std::tie(x, y, z) = point;
+
+        point_index[point] = point_counter;
+        point_counter++;
+
+        stream << '<' << x << ',' << y << ',' << z << "> ";
+    }
+
+    stream << std::endl << "  }" << std::endl;
+
+    // Output faces
+    size_t mesh_counter = 0;
+
+    stream << "  face_indices {" << std::endl;
+    stream << "    " << mesh.faces.size() << "," << std::endl;
+    stream << "    ";
+
+    for (const MeshFace& face: mesh.faces) {
+        mesh_counter++;
+
+        const auto& a = std::get<0>(face);
+        const auto& b = std::get<1>(face);
+        const auto& c = std::get<2>(face);
+
+        stream << '<' << point_index[*a] << ','
+                      << point_index[*b] << ','
+                      << point_index[*c] << "> ";
+    }
+
+    stream << std::endl << "  }" << std::endl;
+
+    // Meta informations
     stream << "  /** :PROPERTIES: **/" << std::endl;
     stream << '}' << std::endl;
 }
