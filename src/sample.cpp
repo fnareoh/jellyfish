@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <iostream>
 #include <math.h>
 #include <vector>
 
@@ -39,7 +40,7 @@ Mesh sample_half_sphere(double r, double d_theta, double d_alpha){
 				r*cos(i*d_alpha+d_a)*sin(j*d_theta+d_t),
 				r*cos(i*d_alpha+d_a)
 			};
-			
+
 			mesh_half_sphere.insert(a,b,c);
 			mesh_half_sphere.insert(b,c,d);
 		}
@@ -81,8 +82,8 @@ Mesh simple_tentacle(double len, double width, double pos_x, double pos_y){
 	return tentacles;
 }
 
-main(){
-	sample_half_sphere(5, PI/100, PI/100);
+int main() {
+	povray_output(std::cout, sample_half_sphere(5, PI/100, PI/100));
 	simple_tentacle(7, 2, 0, 0);
 	return 0;
 }
