@@ -26,7 +26,8 @@ void povray_output_mesh(std::ostream& stream, const Mesh& mesh)
     for (const auto& face: mesh.faces)
         povray_face_output_mesh(stream, face);
 
-    stream << "  /** :PROPERTIES: **/" << std::endl;
+    stream << std::endl;
+    stream << "  #include \"jellyfish_properties.inc\"" << std::endl;
     stream << '}' << std::endl;
 }
 
@@ -43,13 +44,13 @@ void povray_output_mesh2(std::ostream& stream, const Mesh& mesh)
     size_t point_counter = 0;
 
     for (const Point3& point: mesh.points) {
-        int x, y, z;
+        double x, y, z;
         std::tie(x, y, z) = point;
 
         point_index[point] = point_counter;
         point_counter++;
 
-        stream << '<' << x << ',' << y << ',' << z << "> ";
+        stream << std::setprecision(6) << '<' << x << ',' << y << ',' << z << "> ";
     }
 
     stream << std::endl << "  }" << std::endl;
@@ -73,9 +74,9 @@ void povray_output_mesh2(std::ostream& stream, const Mesh& mesh)
                       << point_index[*c] << "> ";
     }
 
-    stream << std::endl << "  }" << std::endl;
+    stream << std::endl << "  }" << std::endl << std::endl;
 
     // Meta informations
-    stream << "  /** :PROPERTIES: **/" << std::endl;
+    stream << "  #include \"jellyfish_properties.inc\"" << std::endl;
     stream << '}' << std::endl;
 }

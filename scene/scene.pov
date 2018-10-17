@@ -9,7 +9,8 @@ camera {
 
 #declare Deepblue = rgb <0, 0, 0.18>;
 
-/** :JELLYFISH: **/
-
 light_source { <1000, 1000, -1000> White }
 light_source { <30, 0, 0> color White }
+
+
+#include "build/jellyfish.inc"

@@ -1,6 +1,5 @@
-jellyfish
-scene.png
-build/
-scene/build
-deps/
+/jellyfish
+/scene.png
 
+build
+/deps

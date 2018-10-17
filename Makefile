@@ -95,18 +95,16 @@ $(BUILD_DIR)/%.w: $(SRC_DIR)/%.cpp
 # ==================================================================================================
 # Put the scene files together and render the scene
 
-$(SCENE_DIR)/build/jellyfish.pov: $(EXEC) $(SCENE_DIR)/jellyfish_properties.pov
+SCENE_INCS = \
+	$(SCENE_DIR)/build/jellyfish.inc \
+	$(SCENE_DIR)/jellyfish_properties.inc
+
+$(SCENE_DIR)/build/jellyfish.inc: $(EXEC)
 	@mkdir -p $(dir $@)
 	./$(EXEC) > $@
-	@sed -i -e '/:PROPERTIES:/r $(SCENE_DIR)/jellyfish_properties.pov' $@
 
-$(SCENE_DIR)/build/scene.pov: $(SCENE_DIR)/scene.pov $(SCENE_DIR)/build/jellyfish.pov
-	@mkdir -p $(dir $@)
-	@cp $(SCENE_DIR)/scene.pov $@
-	@sed -i -e '/:JELLYFISH:/r $(SCENE_DIR)/build/jellyfish.pov' $@
-
-scene.png: $(SCENE_DIR)/build/scene.pov
-	povray Output_File_Name=$@ $(SCENE_DIR)/build/scene.pov
+scene.png: $(SCENE_DIR)/scene.pov $(SCENE_INCS)
+	cd $(SCENE_DIR) && povray Output_File_Name=../$@ scene.pov
 
 # ==================================================================================================
 # Clean intermediate files (not final results like executables, documentation, packages,...)
