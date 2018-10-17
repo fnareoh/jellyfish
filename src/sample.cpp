@@ -12,33 +12,33 @@
 Mesh sample_half_sphere(double r, double d_theta, double d_alpha){
 	Mesh mesh_half_sphere;
 	for(int i=0; i*d_alpha < PI/2; i++){
-		for(int j=0; j*d_theta < 2*M_PI; j++){
+		for(int j=0; j*d_theta < 2*PI; j++){
 
 			double d_t = std::min(d_theta, 2*PI-j*d_theta);
-			double d_a = std::min(d_alpha, PI/2-j*d_alpha);
+			double d_a = std::min(d_alpha, PI/2-i*d_alpha);
 
 			Point3 a = {
 				r*cos(i*d_alpha)*cos(j*d_theta),
 				r*cos(i*d_alpha)*sin(j*d_theta),
-				r*cos(i*d_alpha)
+				r*sin(i*d_alpha)
 			};
 
 			Point3 b = {
 				r*cos(i*d_alpha)*cos(j*d_theta+d_t),
 				r*cos(i*d_alpha)*sin(j*d_theta+d_t),
-				r*cos(i*d_alpha)
+				r*sin(i*d_alpha)
 			};
 
 			Point3 c = {
 				r*cos(i*d_alpha+d_a)*cos(j*d_theta),
 				r*cos(i*d_alpha+d_a)*sin(j*d_theta),
-				r*cos(i*d_alpha+d_a)
+				r*sin(i*d_alpha+d_a)
 			};
 
 			Point3 d = {
 				r*cos(i*d_alpha+d_a)*cos(j*d_theta+d_t),
 				r*cos(i*d_alpha+d_a)*sin(j*d_theta+d_t),
-				r*cos(i*d_alpha+d_a)
+				r*sin(i*d_alpha+d_a)
 			};
 
 			mesh_half_sphere.insert(a,b,c);
@@ -56,7 +56,7 @@ Mesh simple_tentacle(double len, double width, double pos_x, double pos_y){
 	for(int i=0; i<2; i++){
 		for(int j=0; j<2; j++){
 			point_high.push_back({pos_x + r_pos[i], pos_y + r_pos[j],0});
-			point_low.push_back({pos_x + r_pos[i], pos_y + r_pos[j],len});
+			point_low.push_back({pos_x + r_pos[i], pos_y + r_pos[j],-len});
 		}
 	}
 	tentacles.insert(point_high[0],point_high[1],point_high[2]);
@@ -83,7 +83,11 @@ Mesh simple_tentacle(double len, double width, double pos_x, double pos_y){
 }
 
 int main() {
-	povray_output_mesh2(std::cout, sample_half_sphere(5, PI/100, PI/100));
-	simple_tentacle(7, 2, 0, 0);
+	povray_output_mesh(std::cout, sample_half_sphere(5, PI/50, PI/50));
+	povray_output_mesh(std::cout, simple_tentacle(7, 1, 0, 0));
+	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, 1, 1));
+	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, -1, 1));
+	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, 1, -1));
+	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, -1, -1));
 	return 0;
 }
