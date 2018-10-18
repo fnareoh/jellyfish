@@ -52,6 +52,49 @@ Mesh sample_half_sphere(double pos_x, double pos_y, double pos_z,
 	return mesh_half_sphere;
 }
 
+Mesh jelly_shape(double pos_x, double pos_y, double pos_z,
+					 double r, double d_theta, double d_alpha,
+					 double squeeze){
+	Mesh mesh_half_sphere;
+	double nb_step_alpha = PI/(2*d_alpha);
+	for(int i=0; i*d_alpha < PI/2; i++){
+		for(int j=0; j*d_theta < 2*PI; j++){
+
+			double d_t = std::min(d_theta, 2*PI-j*d_theta);
+			double d_a = std::min(d_alpha, PI/2-i*d_alpha);
+			double r_comp_i = r*(1+ squeeze*(2*abs(nb_step_alpha/2-i)/nb_step_alpha));
+			double r_comp_i_plus = r*(1+ squeeze*(2*abs(nb_step_alpha/2-i-1)/nb_step_alpha));
+			Point3 a = {
+				pos_x + r_comp_i*cos(i*d_alpha)*cos(j*d_theta),
+				pos_y + r_comp_i*cos(i*d_alpha)*sin(j*d_theta),
+				pos_z + r_comp_i*sin(i*d_alpha)
+			};
+
+			Point3 b = {
+				pos_x + r_comp_i*cos(i*d_alpha)*cos(j*d_theta+d_t),
+				pos_y + r_comp_i*cos(i*d_alpha)*sin(j*d_theta+d_t),
+				pos_z + r_comp_i*sin(i*d_alpha)
+			};
+
+			Point3 c = {
+				pos_x + r_comp_i_plus*cos(i*d_alpha+d_a)*cos(j*d_theta),
+				pos_y + r_comp_i_plus*cos(i*d_alpha+d_a)*sin(j*d_theta),
+				pos_z + r_comp_i_plus*sin(i*d_alpha+d_a)
+			};
+
+			Point3 d = {
+				pos_x + r_comp_i_plus*cos(i*d_alpha+d_a)*cos(j*d_theta+d_t),
+				pos_y + r_comp_i_plus*cos(i*d_alpha+d_a)*sin(j*d_theta+d_t),
+				pos_z + r_comp_i_plus*sin(i*d_alpha+d_a)
+			};
+
+			mesh_half_sphere.insert(a,b,c);
+			mesh_half_sphere.insert(b,c,d);
+		}
+	}
+	return mesh_half_sphere;
+}
+
 Mesh simple_tentacle(double len, double width, double pos_x, double pos_y, double  pos_z){
 	Mesh tentacles;
 	std::vector<double> r_pos{-0.5*width,0.5*width};
@@ -87,22 +130,22 @@ Mesh simple_tentacle(double len, double width, double pos_x, double pos_y, doubl
 }
 
 int jellyfish(double pos_x, double pos_y, double pos_z, double squeeze){
-	povray_output_mesh(std::cout, sample_half_sphere(pos_x,pos_y,pos_z,5, PI/50, PI/50, squeeze));
-	povray_output_mesh(std::cout, simple_tentacle(7, 1, pos_x, pos_y, pos_z));
-	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, pos_x + 1, pos_y + 1, pos_z));
-	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, pos_x - 1, pos_y + 1, pos_z));
-	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, pos_x + 1, pos_y - 1, pos_z));
-	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, pos_x - 1, pos_y - 1, pos_z));
+	povray_output_mesh2(std::cout, sample_half_sphere(pos_x,pos_y,pos_z,5, PI/100, PI/100, squeeze));
+	povray_output_mesh2(std::cout, simple_tentacle(7, 1, pos_x, pos_y, pos_z));
+	povray_output_mesh2(std::cout, simple_tentacle(4, 0.5, pos_x + 1, pos_y + 1, pos_z));
+	povray_output_mesh2(std::cout, simple_tentacle(4, 0.5, pos_x - 1, pos_y + 1, pos_z));
+	povray_output_mesh2(std::cout, simple_tentacle(4, 0.5, pos_x + 1, pos_y - 1, pos_z));
+	povray_output_mesh2(std::cout, simple_tentacle(4, 0.5, pos_x - 1, pos_y - 1, pos_z));
 }
 
 int main() {
 	//high begin 0
 	//vector<double> list_of_hights = {0,0,0,0,0.2,0.5,1,1.8,2.2,2.3,2.4,2.4,2.4};
 	//vector<double> list_of_squeeze = {0,0.1,0.2,0.3,0.2,0.1,0,-0.1,-0.2,-0.3,-0.2,-0.1};
-	jellyfish(0,0,0,0);
+	//jellyfish(0,0,0,0);
 	//jellyfish(0,0,0,0.1);
 	//jellyfish(0,0,0,0.2);
-	//jellyfish(0,0,0,0.3);
+	jellyfish(0,0,0,0.3);
 	//jellyfish(0,0,0.2,0.2);
 	//jellyfish(0,0,0.5,0.1);
 	//jellyfish(0,0,1,0);
