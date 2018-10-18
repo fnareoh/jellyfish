@@ -40,10 +40,13 @@ EXEC = jellyfish
 # Directory holding scene files
 SCENE_DIR = scene
 
+# Extra parameters to povray
+POV_ARGS = -w800 -h450
+
 # ==================================================================================================
 # Configuration
 
-.PHONY: all release debug scene
+.PHONY: all release debug scene fast fancy
 
 # ==================================================================================================
 # Main targets
@@ -57,6 +60,17 @@ release: $(EXEC)
 all: release
 
 scene: scene.png
+
+# ==================================================================================================
+# Quality targets
+
+# 144p
+fast: POV_ARGS = -w256 -h144
+fast: scene
+
+# 4K
+fancy: POV_ARGS = -w4096 -h2304
+fancy: scene
 
 # ==================================================================================================
 # Main rules
@@ -104,7 +118,7 @@ $(SCENE_DIR)/build/jellyfish.inc: $(EXEC)
 	./$(EXEC) > $@
 
 scene.png: $(SCENE_DIR)/scene.pov $(SCENE_INCS)
-	cd $(SCENE_DIR) && povray Output_File_Name=../$@ scene.pov
+	cd $(SCENE_DIR) && povray $(POV_ARGS) Output_File_Name=../$@ scene.pov
 
 # ==================================================================================================
 # Clean intermediate files (not final results like executables, documentation, packages,...)
