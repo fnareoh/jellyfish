@@ -96,7 +96,10 @@ int jellyfish(double pos_x, double pos_y, double pos_z, double squeeze){
 }
 
 int main() {
-	//jellyfish(0,0,0,0);
+	//high begin 0
+	//vector<double> list_of_hights = {0,0,0,0,0.2,0.5,1,1.8,2.2,2.3,2.4,2.4,2.4};
+	//vector<double> list_of_squeeze = {0,0.1,0.2,0.3,0.2,0.1,0,-0.1,-0.2,-0.3,-0.2,-0.1};
+	jellyfish(0,0,0,0);
 	//jellyfish(0,0,0,0.1);
 	//jellyfish(0,0,0,0.2);
 	//jellyfish(0,0,0,0.3);
@@ -107,12 +110,9 @@ int main() {
 	//jellyfish(0,0,2.2,-0.2);
 	//jellyfish(0,0,2.3,-0.2);
 	//jellyfish(0,0,2.4,-0.3);
-
 	//jellyfish(0,0,2.4,-0.2);
 	//jellyfish(0,0,2.4,-0.1);
-	//jellyfish(0,0,2.4,0);
-	//jellyfish(0,0,2.4,0.1);
-	//jellyfish(0,0,2.4,0.2);
-	//jellyfish(0,0,2.4,0.3);
-	return 0;
+
+	
+	//repeat for high begin 2.4
 }
