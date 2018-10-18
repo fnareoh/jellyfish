@@ -17,8 +17,9 @@ global_settings{max_trace_level 15}
 // Camera
 #declare PoV=<-20, -20, -400>;
 camera{
-        location PoV
-        look_at <0, 0, 0>
+    right x * 16/9
+    location PoV
+    look_at <0, 0, 0>
 }
 
 // Lights
@@ -59,6 +60,6 @@ union{
       }
      }
 
-        scale 4
-        rotate y*rotSub  translate posSub
+    scale 4
+    rotate y*rotSub  translate posSub
 }
