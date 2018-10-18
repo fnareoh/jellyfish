@@ -118,7 +118,7 @@ $(SCENE_DIR)/build/jellyfish.inc: $(EXEC)
 	./$(EXEC) > $@
 
 scene.png: $(SCENE_DIR)/scene.pov $(SCENE_INCS)
-	cd $(SCENE_DIR) && povray $(POV_ARGS) Output_File_Name=../$@ scene.pov
+	cd $(SCENE_DIR) && povray +P $(POV_ARGS) -O../$@ scene.pov
 
 # ==================================================================================================
 # Clean intermediate files (not final results like executables, documentation, packages,...)
