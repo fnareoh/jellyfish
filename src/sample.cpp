@@ -83,7 +83,7 @@ Mesh simple_tentacle(double len, double width, double pos_x, double pos_y){
 }
 
 int main() {
-	povray_output_mesh(std::cout, sample_half_sphere(5, PI/50, PI/50));
+	povray_output_mesh(std::cout, sample_half_sphere(5, PI/100, PI/100));
 	povray_output_mesh(std::cout, simple_tentacle(7, 1, 0, 0));
 	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, 1, 1));
 	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, -1, 1));
