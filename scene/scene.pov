@@ -5,7 +5,7 @@
 #declare Deepwhite = rgb <1, 0.8, 1>;
 
 global_settings{max_trace_level 15}
-#declare AreaOK=false;
+#declare AreaOK = false;  // shadow under objects (slow)
 
 #include "colors.inc"
 #include "functions.inc"
@@ -20,15 +20,6 @@ camera{
         location PoV
         look_at <0, 0, 0>
 }
-
-// Reorientation Macro
-#macro mOrient(P1,P2)
-#local yV1=vnormalize(P2-P1);
-#local xV1=vnormalize(vcross(yV1,z));
-#local zV1=vcross(xV1,yV1);
-                matrix <xV1.x,xV1.y,xV1.z,yV1.x,yV1.y,yV1.z,zV1.x,zV1.y,zV1.z,P1.x,P1.y,P1.z>
-#end
-
 
 // Lights
 #declare colWater=rgb<7,146,217>/255;
@@ -48,6 +39,7 @@ light_source {PoV color colWater*2 shadowless media_interaction off}
 
 union{
     sphere{0,1 scale <2,1,2>}
+
     object{JellyFish scale 1/50 rotate <-90, 5, -10> translate <0, -0.3, 1>}
     object{JellyFish scale 1/50 rotate <-90, 5, -10> translate <0.3, -0.3, 1.2>}
     object{JellyFish scale 1/50 rotate <-90, 5, -10> translate <1.2, 0.5, 1.1>}
