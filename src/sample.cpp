@@ -52,15 +52,15 @@ Mesh sample_half_sphere(double pos_x, double pos_y, double pos_z,
 	return mesh_half_sphere;
 }
 
-Mesh simple_tentacle(double len, double width, double pos_x, double pos_y){
+Mesh simple_tentacle(double len, double width, double pos_x, double pos_y, double  pos_z){
 	Mesh tentacles;
 	std::vector<double> r_pos{-0.5*width,0.5*width};
 	std::vector<Point3> point_high;
 	std::vector<Point3> point_low;
 	for(int i=0; i<2; i++){
 		for(int j=0; j<2; j++){
-			point_high.push_back({pos_x + r_pos[i], pos_y + r_pos[j],0});
-			point_low.push_back({pos_x + r_pos[i], pos_y + r_pos[j],-len});
+			point_high.push_back({pos_x + r_pos[i], pos_y + r_pos[j],pos_z});
+			point_low.push_back({pos_x + r_pos[i], pos_y + r_pos[j],pos_z-len});
 		}
 	}
 	tentacles.insert(point_high[0],point_high[1],point_high[2]);
@@ -86,12 +86,33 @@ Mesh simple_tentacle(double len, double width, double pos_x, double pos_y){
 	return tentacles;
 }
 
+int jellyfish(double pos_x, double pos_y, double pos_z, double squeeze){
+	povray_output_mesh(std::cout, sample_half_sphere(pos_x,pos_y,pos_z,5, PI/50, PI/50, squeeze));
+	povray_output_mesh(std::cout, simple_tentacle(7, 1, pos_x, pos_y, pos_z));
+	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, pos_x + 1, pos_y + 1, pos_z));
+	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, pos_x - 1, pos_y + 1, pos_z));
+	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, pos_x + 1, pos_y - 1, pos_z));
+	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, pos_x - 1, pos_y - 1, pos_z));
+}
+
 int main() {
-	povray_output_mesh(std::cout, sample_half_sphere(0,0,0,5, PI/50, PI/50, -0.2));
-	povray_output_mesh(std::cout, simple_tentacle(7, 1, 0, 0));
-	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, 1, 1));
-	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, -1, 1));
-	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, 1, -1));
-	povray_output_mesh(std::cout, simple_tentacle(4, 0.5, -1, -1));
+	//jellyfish(0,0,0,0);
+	//jellyfish(0,0,0,0.1);
+	//jellyfish(0,0,0,0.2);
+	//jellyfish(0,0,0,0.3);
+	//jellyfish(0,0,0.2,0.2);
+	//jellyfish(0,0,0.5,0.1);
+	//jellyfish(0,0,1,0);
+	//jellyfish(0,0,1.8,-0.1);
+	//jellyfish(0,0,2.2,-0.2);
+	//jellyfish(0,0,2.3,-0.2);
+	//jellyfish(0,0,2.4,-0.3);
+
+	//jellyfish(0,0,2.4,-0.2);
+	//jellyfish(0,0,2.4,-0.1);
+	//jellyfish(0,0,2.4,0);
+	//jellyfish(0,0,2.4,0.1);
+	//jellyfish(0,0,2.4,0.2);
+	//jellyfish(0,0,2.4,0.3);
 	return 0;
 }
