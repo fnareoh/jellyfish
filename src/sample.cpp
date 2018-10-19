@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <array>
 #include <iostream>
 #include <math.h>
 #include <cmath>
@@ -220,57 +221,36 @@ int jellyfish(double pos_x, double pos_y, double pos_z, double width_jelly, doub
 }
 
 int main(int argc, const char** argv) {
-	//high begin 0
-	//vector<double> list_of_hights = {0,0,0,0,0.2,0.5,1,1.8,2.2,2.3,2.4,2.4,2.4};
-	//vector<double> list_of_squeeze = {0,0.1,0.2,0.3,0.2,0.1,0,-0.1,-0.2,-0.3,-0.2,-0.1};
-	// jellyfish_simple(0,0,0,0);
+    // Successive states of the jellyfish: y_position and squeeze
+    std::vector<std::array<double, 2>> frame_states = {
+        {0.0, 0.0}, // 0
+        {0.0, 0.1}, // 1
+        {0.0, 0.2}, // 2
+        {0.0, 0.3}, // 3
+        {0.2, 0.2}, // 4
+        {0.5, 0.1}, // 5
+        {1.0, 0.0}, // 6
+        {1.8, -0.1}, // 7
+        {2.3, -0.2}, // 8
+        {2.4, -0.3}, // 9
+        {2.4, -0.2}, // 10
+        {2.4, -0.1}, // 11
+    };
+    size_t nb_frames = frame_states.size();
 
+    // Read the frame we want to render from stdin
     int frame = 0;
 
     if (argc > 1)
         frame = std::atoi(argv[1]);
 
-    int nb_loops = frame / 12;
+    // Distance traveled by the jelly during one period
+    double period_travel = frame_states[nb_frames - 1][0] - frame_states[0][0];
+    // Number of complete periods that have been traveled
+    int period_count = frame / nb_frames;
 
-    switch (frame % 12) {
-        case 0:
-            jellyfish(0,0,0 + nb_loops * 2.4,5,0.1,0);
-            break;
-        case 1:
-            jellyfish(0,0,0 + nb_loops * 2.4,5,0.1,0.1);
-            break;
-        case 2:
-            jellyfish(0,0,0 + nb_loops * 2.4,5,0.1,0.2);
-            break;
-        case 3:
-            jellyfish(0,0,0 + nb_loops * 2.4,5,0.1,0.3);
-            break;
-        case 4:
-            jellyfish(0,0,0.2 + nb_loops * 2.4,5,0.1,0.2);
-            break;
-        case 5:
-            jellyfish(0,0,0.5 + nb_loops * 2.4,5,0.1,0.1);
-            break;
-        case 6:
-            jellyfish(0,0,1 + nb_loops * 2.4,5,0.1,0);
-            break;
-        case 7:
-            jellyfish(0,0,1.8 + nb_loops * 2.4,5,0.1,-0.1);
-            break;
-        case 8:
-            jellyfish(0,0,2.3 + nb_loops * 2.4,5,0.1,-0.2);
-            break;
-        case 9:
-            jellyfish(0,0,2.4 + nb_loops * 2.4,5,0.1,-0.3);
-            break;
-        case 10:
-            jellyfish(0,0,2.4 + nb_loops * 2.4,5,0.1,-0.2);
-            break;
-        case 11:
-            jellyfish(0,0,2.4 + nb_loops * 2.4,5,0.1,-0.1);
-            break;
-    }
-
-	//jellyfish(0,0,0,5,0.1,-0.1);
-
+    // Render the jelly
+    double z_position = frame_states[frame % nb_frames][0] + period_count * period_travel;
+    double squeeze = frame_states[frame % nb_frames][1];
+    jellyfish(0, 0, z_position, 5, 0.1, squeeze);
 }

@@ -5,7 +5,7 @@
 #declare Deepwhite = rgb <1, 0.8, 1>;
 
 global_settings{max_trace_level 15}
-#declare AreaOK = false;  // shadow under objects (slow)
+#declare AreaOK = true;  // shadow under objects (slow)
 
 #include "colors.inc"
 #include "functions.inc"
@@ -41,11 +41,26 @@ light_source {PoV color colWater*2 shadowless media_interaction off}
 union{
     sphere{0,1 scale <2,1,2>}
 
-    object{JellyFish scale 1/50 rotate <-90, 5, -10> translate <0, -0.3, 1>}
-    object{JellyFish scale 1/50 rotate <-90, 5, -10> translate <0.3, -0.3, 1.2>}
-    object{JellyFish scale 1/50 rotate <-90, 5, -10> translate <1.2, 0.5, 1.1>}
-    object{JellyFish scale 1/50 rotate <-90, -5, 10> translate <0, 0.2, 0.2>}
-    object{JellyFish scale 1/50 rotate <-90, 10, 3> translate <0.05, -0, 0.05>}
+
+
+    #for (zPos, -10, 10)
+        object {
+            JellyFish translate <0, 0, -2.4 * 10 * zPos>
+            scale 1/50 rotate <-90, 10, 3> translate <0.05, -0, 0.05>
+        }
+        object {
+            JellyFish translate <0, 0, -2.4 * 10 * zPos> scale 1/50
+            rotate <-90, 5, -10> translate <0, -0.3, 1>}
+        object {
+            JellyFish translate <0, 0, -2.4 * 10 * zPos> scale 1/50
+            rotate <-90, 5, -10> translate <0.3, -0.3, 1.2>}
+        object {
+            JellyFish translate <0, 0, -2.4 * 10 * zPos> scale 1/50
+            rotate <-90, 5, -10> translate <1.2, 0.5, 1.1>}
+        object {
+            JellyFish translate <0, 0, -2.4 * 10 * zPos> scale 1/50
+            rotate <-90, -5, 10> translate <0, 0.2, 0.2>}
+    #end
 
     sphere{<0,1,0>,1/1.5}
 

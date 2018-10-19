@@ -2,5 +2,6 @@
 *.png
 *.gif
 
+*.pov-state
 build
 /deps

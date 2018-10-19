@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # number of frames to render
-NB_FRAMES=45
+NB_FRAMES=120
 
 nb_hosts=0
 while read host ; do
@@ -13,8 +13,7 @@ echo "---" $nb_hosts "hosts found"
 echo "--- Update remote sources"
 
 while read host ; do
-    ssh -nv $host 'rm -rf /tmp/jelly && mkdir -p /tmp/jelly'
-    echo $host
+    ssh -n $host 'rm -rf /tmp/jelly && mkdir -p /tmp/jelly' &
 done < scripts/hosts.list
 
 wait
@@ -38,7 +37,7 @@ while read host ; do
     command='cd /tmp/jelly && make clean && make release'
     for i in `seq $start $end` ; do
         i=$(printf "%03d" $i)
-        command=$command" && nohup make POV_ARGS=+WT6 FRAME=${i} scene > /dev/null"
+        command=$command" && nohup make POV_ARGS=+WT8 FRAME=${i} fast > /dev/null"
     done
     echo $command
     ssh -n $host "${command}" &
@@ -54,7 +53,7 @@ echo "--- Collect frames"
 rm -r frames
 while read host ; do
     mkdir -p frames/$host
-    scp $host:/tmp/jelly/scene_frame*.png frames/$host
+    scp $host:/tmp/jelly/scene_frame*.png frames/$host &
 done < scripts/hosts.list
 
 wait
