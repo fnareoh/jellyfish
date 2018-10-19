@@ -146,7 +146,7 @@ Mesh sinus_tentacle(double angle, double pos_x, double pos_y, double  pos_z, dou
 	double omega = 0.6*(1 + 0.5*squeeze);
 	double ampl = 0.5*(1 + 0.5*squeeze);
 	double init = 0; //rand();
-	double real_length = len*(1-squeeze);
+	double real_length = len*(1-0.2*squeeze);
 	for(int i=0; i < real_length/d_z; i++){
 		for(int j=0; j*d_theta < 2*PI; j++){
 			double d_t = std::min(d_theta, 2*PI-j*d_theta);
@@ -203,7 +203,7 @@ int jellyfish(double pos_x, double pos_y, double pos_z, double width_jelly, doub
 
 	double step = PI/8;
 	double step_r = 2;
-	double len = 4;
+	double len = 3;
 	for(int i = 0; i*step_r < width_jelly -0.5; i++){
 		for(int j = 0; j*step < 2*PI; j++){
 			double r_i = i+1*step_r;
