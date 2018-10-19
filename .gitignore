@@ -1,5 +1,6 @@
 /jellyfish
-/scene.png
+*.png
+*.gif
 
 build
 /deps

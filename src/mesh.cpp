@@ -59,7 +59,7 @@ int Mesh::insert(const Point3 a, const Point3 b, const Point3 c)
         return created_points_count;
 
     // Insert the face
-    faces.insert({iter_a, iter_b, iter_c});
+    faces.insert(std::make_tuple(iter_a, iter_b, iter_c));
     return created_points_count;
 }
 

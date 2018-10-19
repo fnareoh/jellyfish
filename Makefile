@@ -41,12 +41,16 @@ EXEC = jellyfish
 SCENE_DIR = scene
 
 # Extra parameters to povray
-POV_ARGS = -w800 -h450
+POV_ARGS = +P
+POV_DISP = -w800 -h450
+
+# Frame to render
+FRAME = 0
 
 # ==================================================================================================
 # Configuration
 
-.PHONY: all release debug scene fast fancy
+.PHONY: all release debug scene fast fancy mesh
 
 # ==================================================================================================
 # Main targets
@@ -59,17 +63,17 @@ release: $(EXEC)
 
 all: release
 
-scene: scene.png
+scene: scene_frame_$(FRAME).png
 
 # ==================================================================================================
 # Quality targets
 
 # 144p
-fast: POV_ARGS = -w256 -h144
+fast: POV_DISP = -w256 -h144
 fast: scene
 
 # 4K
-fancy: POV_ARGS = -w4096 -h2304
+fancy: POV_DISP = -w4096 -h2304
 fancy: scene
 
 # ==================================================================================================
@@ -109,16 +113,15 @@ $(BUILD_DIR)/%.w: $(SRC_DIR)/%.cpp
 # ==================================================================================================
 # Put the scene files together and render the scene
 
-SCENE_INCS = \
-	$(SCENE_DIR)/build/jellyfish.inc \
-	$(SCENE_DIR)/jellyfish_properties.inc
+SCENE_INCS = mesh $(SCENE_DIR)/jellyfish_properties.inc $(SCENE_DIR)/scene.pov
 
-$(SCENE_DIR)/build/jellyfish.inc: $(EXEC)
-	@mkdir -p $(dir $@)
-	./$(EXEC) > $@
+mesh:
+	@mkdir -p $(SCENE_DIR)/build
+	./$(EXEC) $(FRAME) > $(SCENE_DIR)/build/jellyfish.inc
 
-scene.png: $(SCENE_DIR)/scene.pov $(SCENE_INCS)
-	cd $(SCENE_DIR) && povray +P $(POV_ARGS) -O../$@ scene.pov
+scene_frame_$(FRAME).png: mesh
+scene_frame_$(FRAME).png: $(SCENE_INCS)
+	cd $(SCENE_DIR) && povray $(POV_DISP) $(POV_ARGS) -O../scene_frame_$(shell printf "%03d" $(FRAME)).png scene.pov
 
 # ==================================================================================================
 # Clean intermediate files (not final results like executables, documentation, packages,...)
