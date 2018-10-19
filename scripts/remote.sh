@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # number of frames to render
-NB_FRAMES=15
+NB_FRAMES=45
 
 nb_hosts=0
 while read host ; do
@@ -13,7 +13,7 @@ echo "---" $nb_hosts "hosts found"
 echo "--- Update remote sources"
 
 while read host ; do
-    ssh -nv $host 'rm -rf /tmp/jelly && mkdir -p /tmp/jelly && rm -rf /tmp/jelly/scene_frame*.png'
+    ssh -nv $host 'rm -rf /tmp/jelly && mkdir -p /tmp/jelly'
     echo $host
 done < scripts/hosts.list
 
@@ -21,7 +21,7 @@ wait
 
 while read host ; do
     echo $host
-    rsync --exclude-from '.gitignore' --exclude '.git' -auv ./ $host:/tmp/jelly &
+    rsync --exclude-from '.gitignore' --exclude '.git' -au ./ $host:/tmp/jelly &
 done < scripts/hosts.list
 
 wait
@@ -38,8 +38,9 @@ while read host ; do
     command='cd /tmp/jelly && make clean && make release'
     for i in `seq $start $end` ; do
         i=$(printf "%03d" $i)
-        command=$command" && nohup make POV_ARGS=+WT2 FRAME=${i} scene > /dev/null"
+        command=$command" && nohup make POV_ARGS=+WT6 FRAME=${i} scene > /dev/null"
     done
+    echo $command
     ssh -n $host "${command}" &
 
     host_id=$((host_id + 1))
@@ -50,15 +51,15 @@ clear
 
 echo "--- Collect frames"
 
-mkdir -p frames
-rm frames/*
+rm -r frames
 while read host ; do
-    scp $host:/tmp/jelly/scene_frame*.png frames &
+    mkdir -p frames/$host
+    scp $host:/tmp/jelly/scene_frame*.png frames/$host
 done < scripts/hosts.list
 
 wait
 
 echo "--- Building .gif"
-convert frames/scene_frame_*.png scene.gif
+convert frames/*/scene_frame_*.png scene.gif
 
 # ssh info 'cd /tmp/jelly && make FRAME=1 scene && make FRAME=2 scene'

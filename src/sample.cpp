@@ -198,7 +198,7 @@ void jellyfish_simple(double pos_x, double pos_y, double pos_z, double squeeze) 
 
 int jellyfish(double pos_x, double pos_y, double pos_z, double width_jelly, double width_tentacle, double squeeze){
 	double precision_body = PI/200;
-	double precision_tentacles = PI/100;
+	double precision_tentacles = PI/50;
 	povray_output_mesh2(std::cout, jelly_shape(pos_x,pos_y,pos_z, width_jelly, precision_body, squeeze));
 
 	double step = PI/8;
@@ -230,42 +230,44 @@ int main(int argc, const char** argv) {
     if (argc > 1)
         frame = std::atoi(argv[1]);
 
+    int nb_loops = frame / 12;
+
     switch (frame % 12) {
         case 0:
-            jellyfish(0,0,0,5,0.1,0);
+            jellyfish(0,0,0 + nb_loops * 2.4,5,0.1,0);
             break;
         case 1:
-            jellyfish(0,0,0,5,0.1,0.1);
+            jellyfish(0,0,0 + nb_loops * 2.4,5,0.1,0.1);
             break;
         case 2:
-            jellyfish(0,0,0,5,0.1,0.2);
+            jellyfish(0,0,0 + nb_loops * 2.4,5,0.1,0.2);
             break;
         case 3:
-            jellyfish(0,0,0,5,0.1,0.3);
+            jellyfish(0,0,0 + nb_loops * 2.4,5,0.1,0.3);
             break;
         case 4:
-            jellyfish(0,0,0.2,5,0.1,0.2);
+            jellyfish(0,0,0.2 + nb_loops * 2.4,5,0.1,0.2);
             break;
         case 5:
-            jellyfish(0,0,0.5,5,0.1,0.1);
+            jellyfish(0,0,0.5 + nb_loops * 2.4,5,0.1,0.1);
             break;
         case 6:
-            jellyfish(0,0,1,5,0.1,0);
+            jellyfish(0,0,1 + nb_loops * 2.4,5,0.1,0);
             break;
         case 7:
-            jellyfish(0,0,1.8,5,0.1,-0.1);
+            jellyfish(0,0,1.8 + nb_loops * 2.4,5,0.1,-0.1);
             break;
         case 8:
-            jellyfish(0,0,2.3,5,0.1,-0.2);
+            jellyfish(0,0,2.3 + nb_loops * 2.4,5,0.1,-0.2);
             break;
         case 9:
-            jellyfish(0,0,2.4,5,0.1,-0.3);
+            jellyfish(0,0,2.4 + nb_loops * 2.4,5,0.1,-0.3);
             break;
         case 10:
-            jellyfish(0,0,2.4,5,0.1,-0.2);
+            jellyfish(0,0,2.4 + nb_loops * 2.4,5,0.1,-0.2);
             break;
         case 11:
-            jellyfish(0,0,2.4,5,0.1,-0.1);
+            jellyfish(0,0,2.4 + nb_loops * 2.4,5,0.1,-0.1);
             break;
     }
 

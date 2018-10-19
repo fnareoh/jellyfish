@@ -115,13 +115,13 @@ $(BUILD_DIR)/%.w: $(SRC_DIR)/%.cpp
 
 SCENE_INCS = mesh $(SCENE_DIR)/jellyfish_properties.inc $(SCENE_DIR)/scene.pov
 
-mesh:
+mesh: $(EXEC)
 	@mkdir -p $(SCENE_DIR)/build
 	./$(EXEC) $(FRAME) > $(SCENE_DIR)/build/jellyfish.inc
 
 scene_frame_$(FRAME).png: mesh
 scene_frame_$(FRAME).png: $(SCENE_INCS)
-	cd $(SCENE_DIR) && povray $(POV_DISP) $(POV_ARGS) -O../scene_frame_$(shell printf "%03d" $(FRAME)).png scene.pov
+	cd $(SCENE_DIR) && povray $(POV_DISP) $(POV_ARGS) -O../scene_frame_$(FRAME).png scene.pov
 
 # ==================================================================================================
 # Clean intermediate files (not final results like executables, documentation, packages,...)
