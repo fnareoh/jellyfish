@@ -66,8 +66,8 @@ Mesh jelly_shape(double pos_x, double pos_y, double pos_z,
 			double d_t = std::min(d_theta, 2*PI-j*d_theta);
 			double d_a = std::min(d_alpha, PI/2-i*d_alpha);
 
-			double skirt_status = 0.1*abs((double)round((double) 6*((double)j*d_theta)/PI) - (double) 6*((double)j*d_theta)/PI);
-			double skirt_status_plus = 0.1*abs((double)round((double) 6*((double)j*d_theta+d_t)/PI) - (double) 6*((double)j*d_theta+d_t)/PI);
+			double skirt_status = 0.3*pow((double)round((double) 6*((double)j*d_theta)/PI) - (double) 6*((double)j*d_theta)/PI,2.0);
+			double skirt_status_plus = 0.3*pow((double)round((double) 6*((double)j*d_theta+d_t)/PI) - (double) 6*((double)j*d_theta+d_t)/PI,2.0);
 			
 			double squeeze_status = (1+ squeeze*((nb_step_alpha-i)/nb_step_alpha));
 			double squeeze_status_plus = (1+ squeeze*((nb_step_alpha-i-1)/nb_step_alpha));
@@ -183,6 +183,16 @@ Mesh sinus_tentacle(double len, double width, double d_z, double d_theta, double
 	return tentacles;
 }
 
+int jellyfish_simple(double pos_x, double pos_y, double pos_z, double squeeze){
+	povray_output_mesh2(std::cout, sample_half_sphere(pos_x,pos_y,pos_z,5, PI/100, PI/100, squeeze));
+	povray_output_mesh2(std::cout, simple_tentacle(7, 0.5, pos_x , pos_y , pos_z));
+
+	povray_output_mesh2(std::cout, simple_tentacle(4, 0.5, pos_x + 1, pos_y + 1, pos_z));
+	povray_output_mesh2(std::cout, simple_tentacle(4, 0.5, pos_x - 1, pos_y + 1, pos_z));
+	povray_output_mesh2(std::cout, simple_tentacle(4, 0.5, pos_x + 1, pos_y - 1, pos_z));
+	povray_output_mesh2(std::cout, simple_tentacle(4, 0.5, pos_x - 1, pos_y - 1, pos_z));
+}
+
 int jellyfish(double pos_x, double pos_y, double pos_z, double r, double width, double squeeze){
 	povray_output_mesh2(std::cout, jelly_shape(pos_x,pos_y,pos_z,5, PI/100, PI/100, squeeze));
 	double step = PI/8;
@@ -209,20 +219,9 @@ int main() {
 	//high begin 0
 	//vector<double> list_of_hights = {0,0,0,0,0.2,0.5,1,1.8,2.2,2.3,2.4,2.4,2.4};
 	//vector<double> list_of_squeeze = {0,0.1,0.2,0.3,0.2,0.1,0,-0.1,-0.2,-0.3,-0.2,-0.1};
-	//jellyfish(0,0,0,0);
-	//jellyfish(0,0,0,0.1);
-	//jellyfish(0,0,0,0.2);
-	//jellyfish(0,0,0,5,0.1,0.3);
-	//jellyfish(0,0,0.2,0.2);
-	//jellyfish(0,0,0.5,0.1);
-	//jellyfish(0,0,1,4.5,0);
-	//jellyfish(0,0,1.8,-0.1);
-	//jellyfish(0,0,2.2,-0.2);
-	//jellyfish(0,0,2.3,-0.2);
-	jellyfish(0,0,2.4,2.7,0.1,-0.3);
-	//jellyfish(0,0,2.4,-0.2);
-	//jellyfish(0,0,2.4,-0.1);
+	jellyfish_simple(0,0,0,0);
 
+	//jellyfish(0,0,0,5,0.1,0);
 	
 	//repeat for high begin 2.4
 }
