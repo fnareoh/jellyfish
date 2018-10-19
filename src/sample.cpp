@@ -56,9 +56,11 @@ Mesh sample_half_sphere(double pos_x, double pos_y, double pos_z,
 
 
 Mesh jelly_shape(double pos_x, double pos_y, double pos_z,
-					 double r, double d_theta, double d_alpha,
+					 double r, double precision,
 					 double squeeze){
 	Mesh mesh_half_sphere;
+	double d_alpha = precision;
+	double d_theta = precision;
 	double nb_step_alpha = PI/(2*d_alpha);
 	for(int i=0; i*d_alpha < PI/2; i++){
 		for(int j=0; j*d_theta < 2*PI; j++){
@@ -66,37 +68,34 @@ Mesh jelly_shape(double pos_x, double pos_y, double pos_z,
 			double d_t = std::min(d_theta, 2*PI-j*d_theta);
 			double d_a = std::min(d_alpha, PI/2-i*d_alpha);
 
-			double skirt_status = 0.3*pow((double)round((double) 6*((double)j*d_theta)/PI) - (double) 6*((double)j*d_theta)/PI,2.0);
-			double skirt_status_plus = 0.3*pow((double)round((double) 6*((double)j*d_theta+d_t)/PI) - (double) 6*((double)j*d_theta+d_t)/PI,2.0);
+			double skirt_status = 0.5*pow((double)round((double) 6*((double)j*d_theta)/PI) - (double) 6*((double)j*d_theta)/PI,2.0);
+			double skirt_status_plus = 0.5*pow((double)round((double) 6*((double)j*d_theta+d_t)/PI) - (double) 6*((double)j*d_theta+d_t)/PI,2.0);
 
 			double squeeze_status = (1+ squeeze*((nb_step_alpha-i)/nb_step_alpha));
 			double squeeze_status_plus = (1+ squeeze*((nb_step_alpha-i-1)/nb_step_alpha));
 
-			//std::cout << (1-((nb_step_alpha-i)/nb_step_alpha)*skirt_status) << std::endl;
-			//std::cout << (1-((nb_step_alpha-i)/nb_step_alpha)*skirt_status_plus) << std::endl;
-
-			Point3 a  {
-				pos_x + r*squeeze_status*(1-((nb_step_alpha-i)/nb_step_alpha)*skirt_status)*cos(i*d_alpha)*cos(j*d_theta),
-				pos_y + r*squeeze_status*(1-((nb_step_alpha-i)/nb_step_alpha)*skirt_status)*cos(i*d_alpha)*sin(j*d_theta),
-				pos_z + r*squeeze_status*(1-((nb_step_alpha-i)/nb_step_alpha)*skirt_status)*sin(i*d_alpha)
+			Point3 a = {
+				pos_x + r*squeeze_status*(1-pow((nb_step_alpha-i)/nb_step_alpha,4.0)*skirt_status)*cos(i*d_alpha)*cos(j*d_theta),
+				pos_y + r*squeeze_status*(1-pow((nb_step_alpha-i)/nb_step_alpha,4.0)*skirt_status)*cos(i*d_alpha)*sin(j*d_theta),
+				pos_z + r*squeeze_status*(1-pow((nb_step_alpha-i)/nb_step_alpha,4.0)*skirt_status)*sin(i*d_alpha)
 			};
 
-			Point3 b  {
-				pos_x + r*squeeze_status*(1-((nb_step_alpha-i)/nb_step_alpha)*skirt_status_plus)*cos(i*d_alpha)*cos(j*d_theta+d_t),
-				pos_y + r*squeeze_status*(1-((nb_step_alpha-i)/nb_step_alpha)*skirt_status_plus)*cos(i*d_alpha)*sin(j*d_theta+d_t),
-				pos_z + r*squeeze_status*(1-((nb_step_alpha-i)/nb_step_alpha)*skirt_status_plus)*sin(i*d_alpha)
+			Point3 b = {
+				pos_x + r*squeeze_status*(1-pow((nb_step_alpha-i)/nb_step_alpha,4.0)*skirt_status_plus)*cos(i*d_alpha)*cos(j*d_theta+d_t),
+				pos_y + r*squeeze_status*(1-pow((nb_step_alpha-i)/nb_step_alpha,4.0)*skirt_status_plus)*cos(i*d_alpha)*sin(j*d_theta+d_t),
+				pos_z + r*squeeze_status*(1-pow((nb_step_alpha-i)/nb_step_alpha,4.0)*skirt_status_plus)*sin(i*d_alpha)
 			};
 
-			Point3 c  {
-				pos_x + r*squeeze_status_plus*(1-((nb_step_alpha-i-1)/nb_step_alpha)*skirt_status)*cos(i*d_alpha+d_a)*cos(j*d_theta),
-				pos_y + r*squeeze_status_plus*(1-((nb_step_alpha-i-1)/nb_step_alpha)*skirt_status)*cos(i*d_alpha+d_a)*sin(j*d_theta),
-				pos_z + r*squeeze_status_plus*(1-((nb_step_alpha-i-1)/nb_step_alpha)*skirt_status)*sin(i*d_alpha+d_a)
+			Point3 c = {
+				pos_x + r*squeeze_status_plus*(1-pow((nb_step_alpha-i-1)/nb_step_alpha,4.0)*skirt_status)*cos(i*d_alpha+d_a)*cos(j*d_theta),
+				pos_y + r*squeeze_status_plus*(1-pow((nb_step_alpha-i-1)/nb_step_alpha,4.0)*skirt_status)*cos(i*d_alpha+d_a)*sin(j*d_theta),
+				pos_z + r*squeeze_status_plus*(1-pow((nb_step_alpha-i-1)/nb_step_alpha,4.0)*skirt_status)*sin(i*d_alpha+d_a)
 			};
 
-			Point3 d  {
-				pos_x + r*squeeze_status_plus*(1-((nb_step_alpha-i-1)/nb_step_alpha)*skirt_status_plus)*cos(i*d_alpha+d_a)*cos(j*d_theta+d_t),
-				pos_y + r*squeeze_status_plus*(1-((nb_step_alpha-i-1)/nb_step_alpha)*skirt_status_plus)*cos(i*d_alpha+d_a)*sin(j*d_theta+d_t),
-				pos_z + r*squeeze_status_plus*(1-((nb_step_alpha-i-1)/nb_step_alpha)*skirt_status_plus)*sin(i*d_alpha+d_a)
+			Point3 d = {
+				pos_x + r*squeeze_status_plus*(1-pow((nb_step_alpha-i-1)/nb_step_alpha,4.0)*skirt_status_plus)*cos(i*d_alpha+d_a)*cos(j*d_theta+d_t),
+				pos_y + r*squeeze_status_plus*(1-pow((nb_step_alpha-i-1)/nb_step_alpha,4.0)*skirt_status_plus)*cos(i*d_alpha+d_a)*sin(j*d_theta+d_t),
+				pos_z + r*squeeze_status_plus*(1-pow((nb_step_alpha-i-1)/nb_step_alpha,4.0)*skirt_status_plus)*sin(i*d_alpha+d_a)
 			};
 
 			mesh_half_sphere.insert(a,b,c);
@@ -140,39 +139,42 @@ Mesh simple_tentacle(double len, double width, double pos_x, double pos_y, doubl
 	return tentacles;
 }
 
-Mesh sinus_tentacle(double len, double width, double d_z, double d_theta, double pos_x, double pos_y, double  pos_z){
+Mesh sinus_tentacle(double angle, double pos_x, double pos_y, double  pos_z, double len, double width, double precision, double squeeze){
 	Mesh tentacles;
-	double omega = 0.6;
-	double ampl = 0.5;
-	double init = rand();
-	for(int i=0; i < len/d_z; i++){
+	double d_theta = precision;
+	double d_z = precision;
+	double omega = 0.6*(1 + 0.5*squeeze);
+	double ampl = 0.5*(1 + 0.5*squeeze);
+	double init = 0; //rand();
+	double real_length = len*(1-squeeze); 
+	for(int i=0; i < real_length/d_z; i++){
 		for(int j=0; j*d_theta < 2*PI; j++){
 			double d_t = std::min(d_theta, 2*PI-j*d_theta);
-			double dif_z = std::min(d_z, len-i*d_z);
+			double dif_z = std::min(d_z, real_length-i*d_z);
 
-			double comp = (len - i*d_z)/len;
-			double comp_plus = (len - i*d_z - dif_z)/len;
-			Point3 a  {
-				pos_x + width*comp*cos(j*d_theta) + ampl*sin(init+omega*i*d_z),
-				pos_y + width*comp*sin(j*d_theta) + ampl*sin(init+omega*i*d_z),
+			double comp = (real_length - i*d_z)/real_length;
+			double comp_plus = (real_length - i*d_z - dif_z)/real_length;
+			Point3 a = {
+				pos_x + ampl*cos(angle)*sin(init+omega*i*d_z) + width*comp*cos(j*d_theta),
+				pos_y + ampl*sin(angle)*sin(init+omega*i*d_z) + width*comp*sin(j*d_theta),
 				pos_z - i*d_z
 			};
 
-			Point3 b  {
-				pos_x + width*comp*cos(j*d_theta+d_t) + ampl*sin(init+omega*i*d_z),
-				pos_y + width*comp*sin(j*d_theta+d_t) + ampl*sin(init+omega*i*d_z),
+			Point3 b = {
+				pos_x + ampl*cos(angle)*sin(init+omega*i*d_z) + width*comp*cos(j*d_theta+d_t),
+				pos_y + ampl*sin(angle)*sin(init+omega*i*d_z) + width*comp*sin(j*d_theta+d_t),
 				pos_z - i*d_z
 				};
 
-			Point3 c  {
-				pos_x + width*comp_plus*cos(j*d_theta) + ampl*sin(init+omega*(i*d_z+dif_z)),
-				pos_y + width*comp_plus*sin(j*d_theta) + ampl*sin(init+omega*(i*d_z+dif_z)),
+			Point3 c = {
+				pos_x + ampl*cos(angle)*sin(init+omega*(i*d_z+dif_z)) + width*comp_plus*cos(j*d_theta),
+				pos_y + ampl*sin(angle)*sin(init+omega*(i*d_z+dif_z)) + width*comp_plus*sin(j*d_theta),
 				pos_z - i*d_z - dif_z
 			};
 
-			Point3 d  {
-				pos_x + width*comp_plus*cos(j*d_theta+d_t) + ampl*sin(init+omega*(i*d_z+dif_z)),
-				pos_y + width*comp_plus*sin(j*d_theta+d_t) + ampl*sin(init+omega*(i*d_z+dif_z)),
+			Point3 d = {
+				pos_x + ampl*cos(angle)*sin(init+omega*(i*d_z+dif_z)) + width*comp_plus*cos(j*d_theta+d_t),
+				pos_y + ampl*sin(angle)*sin(init+omega*(i*d_z+dif_z)) + width*comp_plus*sin(j*d_theta+d_t),
 				pos_z - i*d_z - dif_z
 			};
 
@@ -193,26 +195,28 @@ void jellyfish_simple(double pos_x, double pos_y, double pos_z, double squeeze) 
 	povray_output_mesh2(std::cout, simple_tentacle(4, 0.5, pos_x - 1, pos_y - 1, pos_z));
 }
 
-void jellyfish(double pos_x, double pos_y, double pos_z, double r, double width, double squeeze) {
-	povray_output_mesh2(std::cout, jelly_shape(pos_x,pos_y,pos_z,5, PI/100, PI/100, squeeze));
+
+int jellyfish(double pos_x, double pos_y, double pos_z, double width_jelly, double width_tentacle, double squeeze){
+	double precision_body = PI/200;
+	double precision_tentacles = PI/100;
+	povray_output_mesh2(std::cout, jelly_shape(pos_x,pos_y,pos_z, width_jelly, precision_body, squeeze));
+
 	double step = PI/8;
-	double step_r = 1;
-	double len = 5;
-	for(int i = 0; i*step_r < r; i++){
+	double step_r = 2;
+	double len = 4;
+	for(int i = 0; i*step_r < width_jelly -0.5; i++){
 		for(int j = 0; j*step < 2*PI; j++){
 			double r_i = i+1*step_r;
 			double posr_x = r_i*cos(j*step);
 			double posr_y =  r_i*sin(j*step);
 			double posr_z = 0;
-			double len_i = len + r - i;
-			povray_output_mesh2(std::cout, sinus_tentacle(len_i, width, PI/100, PI/100, pos_x+posr_x, pos_y+posr_y, pos_z+ posr_z));
+			double len_i = len + width_jelly - i*step_r; 
+			double angle = j*step;
+			povray_output_mesh2(std::cout, sinus_tentacle(angle,pos_x+posr_x, pos_y+posr_y, pos_z+ posr_z, len_i, width_tentacle, precision_tentacles, squeeze));
+
 		}
 	}
 
-	//povray_output_mesh2(std::cout, simple_tentacle(4, 0.5, pos_x + 1, pos_y + 1, pos_z));
-	//povray_output_mesh2(std::cout, simple_tentacle(4, 0.5, pos_x - 1, pos_y + 1, pos_z));
-	//povray_output_mesh2(std::cout, simple_tentacle(4, 0.5, pos_x + 1, pos_y - 1, pos_z));
-	//povray_output_mesh2(std::cout, simple_tentacle(4, 0.5, pos_x - 1, pos_y - 1, pos_z));
 }
 
 int main(int argc, const char** argv) {
@@ -226,7 +230,7 @@ int main(int argc, const char** argv) {
     if (argc > 1)
         frame = std::atoi(argv[1]);
 
-    switch (frame % 13) {
+    switch (frame % 12) {
         case 0:
             jellyfish_simple(0,0,0,0);
             break;
@@ -237,7 +241,7 @@ int main(int argc, const char** argv) {
             jellyfish_simple(0,0,0,0.2);
             break;
         case 3:
-            jellyfish_simple(0,0,0,5);
+            jellyfish_simple(0,0,0,0.3);
             break;
         case 4:
             jellyfish_simple(0,0,0.2,0.2);
@@ -246,25 +250,25 @@ int main(int argc, const char** argv) {
             jellyfish_simple(0,0,0.5,0.1);
             break;
         case 6:
-            jellyfish_simple(0,0,1,4.5);
+            jellyfish_simple(0,0,1,0);
             break;
         case 7:
             jellyfish_simple(0,0,1.8,-0.1);
             break;
         case 8:
-            jellyfish_simple(0,0,2.2,-0.2);
-            break;
-        case 9:
             jellyfish_simple(0,0,2.3,-0.2);
             break;
-        case 10:
-            jellyfish_simple(0,0,2.4,2.7);
+        case 9:
+            jellyfish_simple(0,0,2.4,-0.3);
             break;
-        case 11:
+        case 10:
             jellyfish_simple(0,0,2.4,-0.2);
             break;
-        case 12:
+        case 11:
             jellyfish_simple(0,0,2.4,-0.1);
             break;
     }
+
+	//jellyfish(0,0,0,5,0.1,-0.1);
+
 }
