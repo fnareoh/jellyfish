@@ -232,40 +232,40 @@ int main(int argc, const char** argv) {
 
     switch (frame % 12) {
         case 0:
-            jellyfish_simple(0,0,0,0);
+            jellyfish(0,0,0,5,0.1,0);
             break;
         case 1:
-            jellyfish_simple(0,0,0,0.1);
+            jellyfish(0,0,0,5,0.1,0.1);
             break;
         case 2:
-            jellyfish_simple(0,0,0,0.2);
+            jellyfish(0,0,0,5,0.1,0.2);
             break;
         case 3:
-            jellyfish_simple(0,0,0,0.3);
+            jellyfish(0,0,0,5,0.1,0.3);
             break;
         case 4:
-            jellyfish_simple(0,0,0.2,0.2);
+            jellyfish(0,0,0.2,5,0.1,0.2);
             break;
         case 5:
-            jellyfish_simple(0,0,0.5,0.1);
+            jellyfish(0,0,0.5,5,0.1,0.1);
             break;
         case 6:
-            jellyfish_simple(0,0,1,0);
+            jellyfish(0,0,1,5,0.1,0);
             break;
         case 7:
-            jellyfish_simple(0,0,1.8,-0.1);
+            jellyfish(0,0,1.8,5,0.1,-0.1);
             break;
         case 8:
-            jellyfish_simple(0,0,2.3,-0.2);
+            jellyfish(0,0,2.3,5,0.1,-0.2);
             break;
         case 9:
-            jellyfish_simple(0,0,2.4,-0.3);
+            jellyfish(0,0,2.4,5,0.1,-0.3);
             break;
         case 10:
-            jellyfish_simple(0,0,2.4,-0.2);
+            jellyfish(0,0,2.4,5,0.1,-0.2);
             break;
         case 11:
-            jellyfish_simple(0,0,2.4,-0.1);
+            jellyfish(0,0,2.4,5,0.1,-0.1);
             break;
     }
 
