@@ -37,7 +37,7 @@ while read host ; do
     command='cd /tmp/jelly && make clean && make release'
     for i in `seq $start $end` ; do
         i=$(printf "%03d" $i)
-        command=$command" && nohup make POV_ARGS=+WT8 FRAME=${i} fast > /dev/null"
+        command=$command" && nohup make POV_ARGS=+WT8 FRAME=${i} scene > /dev/null"
     done
     echo $command
     ssh -n $host "${command}" &
