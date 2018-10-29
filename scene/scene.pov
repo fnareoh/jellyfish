@@ -5,7 +5,7 @@
 #declare Deepwhite = rgb <1, 0.8, 1>;
 
 global_settings{max_trace_level 15}
-#declare AreaOK = false;  // shadow under objects (slow)
+#declare AreaOK = true;  // shadow under objects (slow)
 
 #include "colors.inc"
 #include "functions.inc"
