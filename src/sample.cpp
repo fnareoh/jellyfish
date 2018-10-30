@@ -25,7 +25,7 @@ Mesh sample_half_sphere(double pos_x, double pos_y, double pos_z,
 			double r_comp_i = r*(1+ squeeze*((nb_step_alpha-i)/nb_step_alpha));
 			double r_comp_i_plus = r*(1+ squeeze*((nb_step_alpha-i-1)/nb_step_alpha));
 
-			Point3 a {&
+			Point3 a {
 				pos_x + r_comp_i*cos(i*d_alpha)*cos(j*d_theta),
 				pos_y + r_comp_i*cos(i*d_alpha)*sin(j*d_theta),
 				pos_z + r_comp_i*sin(i*d_alpha)
