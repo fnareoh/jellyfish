@@ -146,13 +146,29 @@ Mesh simple_tentacle(double len, double width, double pos_x, double pos_y, doubl
 	return tentacles;
 }
 
+Point3 sinus_tentacles_ondulation(
+	double pos_x, double pos_y, double pos_z, double r,
+	double squeeze, double angle,
+	double step_z, double step_theta, double attenuation)
+{
+	double omega = 0.9;
+	double ampl = 0.5;
+	double init = 0 + 10*squeeze; //rand();
+	double x = pos_x + ampl*cos(angle)*sin(init+omega*step_z) + r*cos(step_theta);
+	double y = pos_y + ampl*sin(angle)*sin(init+omega*step_z) + r*sin(step_theta);
+	double perli_noise = perlin(x,y + 1*pos_z);
+	Point3 a {
+		x + perli_noise*attenuation,
+		y + perli_noise*attenuation,
+		pos_z - step_z
+	};
+	return a;
+}
+
 Mesh sinus_tentacle(double angle, double pos_x, double pos_y, double  pos_z, double len, double width, double precision, double squeeze){
 	Mesh tentacles;
 	double d_theta = precision;
 	double d_z = precision;
-	double omega = 0.9;
-	double ampl = 0.5;
-	double init = 0 + 10*squeeze; //rand();
 	double real_length = len;
 	for(int i=0; i < real_length/d_z; i++){
 		for(int j=0; j*d_theta < 2*PI; j++){
@@ -161,29 +177,13 @@ Mesh sinus_tentacle(double angle, double pos_x, double pos_y, double  pos_z, dou
 
 			double comp = (real_length - i*d_z)/real_length;
 			double comp_plus = (real_length - i*d_z - dif_z)/real_length;
-			Point3 a {
-				pos_x + ampl*cos(angle)*sin(init+omega*i*d_z) + width*comp*cos(j*d_theta),
-				pos_y + ampl*sin(angle)*sin(init+omega*i*d_z) + width*comp*sin(j*d_theta),
-				pos_z - i*d_z
-			};
+			Point3 a = sinus_tentacles_ondulation(pos_x, pos_y, pos_z, width*comp, squeeze, angle, i*d_z, j*d_theta, 1-comp);
 
-			Point3 b {
-				pos_x + ampl*cos(angle)*sin(init+omega*i*d_z) + width*comp*cos(j*d_theta+d_t),
-				pos_y + ampl*sin(angle)*sin(init+omega*i*d_z) + width*comp*sin(j*d_theta+d_t),
-				pos_z - i*d_z
-				};
+			Point3 b = sinus_tentacles_ondulation(pos_x, pos_y, pos_z, width*comp, squeeze, angle, i*d_z, j*d_theta+d_t, 1-comp);
 
-			Point3 c {
-				pos_x + ampl*cos(angle)*sin(init+omega*(i*d_z+dif_z)) + width*comp_plus*cos(j*d_theta),
-				pos_y + ampl*sin(angle)*sin(init+omega*(i*d_z+dif_z)) + width*comp_plus*sin(j*d_theta),
-				pos_z - i*d_z - dif_z
-			};
+			Point3 c = sinus_tentacles_ondulation(pos_x, pos_y, pos_z, width*comp_plus, squeeze, angle, i*d_z+dif_z, j*d_theta, 1-comp_plus);
 
-			Point3 d {
-				pos_x + ampl*cos(angle)*sin(init+omega*(i*d_z+dif_z)) + width*comp_plus*cos(j*d_theta+d_t),
-				pos_y + ampl*sin(angle)*sin(init+omega*(i*d_z+dif_z)) + width*comp_plus*sin(j*d_theta+d_t),
-				pos_z - i*d_z - dif_z
-			};
+			Point3 d = sinus_tentacles_ondulation(pos_x, pos_y, pos_z, width*comp_plus, squeeze, angle, i*d_z+dif_z, j*d_theta+d_t, 1-comp_plus);
 
 			tentacles.insert(a,b,c);
 			tentacles.insert(b,c,d);
