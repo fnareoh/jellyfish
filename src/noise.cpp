@@ -10,7 +10,7 @@ void init_perlin(double x_min, double x_max, double y_min, double y_max)
     extern int xmin, xmax, ymin, ymax;
 
     std::random_device rd;
-    std::default_random_engine generator(rd());
+    std::default_random_engine generator(0);
     std::uniform_real_distribution<double> distribution(0, 1);
 
     xmin = floor(x_min);
@@ -67,6 +67,8 @@ double dotGridGradient(int ix, int iy, double x, double y)
 // Compute Perlin noise at coordinates x, y
 double perlin(double x, double y)
 {
+    if (x < 0) return perlin(-x, y);
+    if (y < 0) return perlin(x, -y);
 
     // Determine grid cell coordinates
     int x0 = int(x);

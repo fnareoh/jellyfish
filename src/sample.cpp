@@ -67,8 +67,8 @@ Point3 ondulation(
 	double attenuation = pow((nb_step_alpha_i)/nb_step_alpha,4.0);
 	double x = pos_x + r*squeeze_status*(1-attenuation*skirt_status)*cos(step_alpha)*cos(step_theta);
 	double y = pos_y + r*squeeze_status*(1-attenuation*skirt_status)*cos(step_alpha)*sin(step_theta);
-	double perli_noise = perlin(x,y);
-	Point3 a = {
+	double perli_noise = perlin(x,y + 1*pos_z);
+	Point3 a {
 		x + perli_noise*attenuation,
 		y + perli_noise*attenuation,
 		pos_z + 0.8*r*squeeze_status*(1-pow((nb_step_alpha_i)/nb_step_alpha,4.0)*skirt_status)*sin(step_alpha)
@@ -199,8 +199,8 @@ Point3 folded_tentacles_ondulation(
 {
 	double x = pos_x + r*(1-squeeze_status)*(1-skirt_status)*cos(step_theta);
 	double y = pos_y + r*(1-squeeze_status)*(1-skirt_status)*sin(step_theta);
-	double perli_noise = perlin(x,y);
-	Point3 a = {
+	double perli_noise = perlin(x,y + 1*pos_z);
+	Point3 a {
 		x + perli_noise*attenuation,
 		y + perli_noise*attenuation,
 		pos_z - step_alpha
@@ -273,7 +273,7 @@ void jellyfish_simple(double pos_x, double pos_y, double pos_z, double squeeze) 
 int jellyfish(double pos_x, double pos_y, double pos_z, double width_jelly, double width_tentacle, double squeeze){
 	double precision_body = PI/100;
 	double precision_tentacles = PI/30;
-	stl_output_mesh(std::cout, jelly_shape(pos_x,pos_y,pos_z, width_jelly, precision_body, squeeze));
+	povray_output_mesh(std::cout, jelly_shape(pos_x,pos_y,pos_z, width_jelly, precision_body, squeeze));
 
 	double step = PI/12;
 	double step_r = 3.4*(1+squeeze);
@@ -286,13 +286,13 @@ int jellyfish(double pos_x, double pos_y, double pos_z, double width_jelly, doub
 			double posr_z = 0.1;
 			double len_i = len;
 			double angle = j*step;
-			stl_output_mesh(std::cout, sinus_tentacle(angle,pos_x+posr_x, pos_y+posr_y, pos_z+ posr_z, len_i, width_tentacle, precision_tentacles, squeeze));
+			povray_output_mesh(std::cout, sinus_tentacle(angle,pos_x+posr_x, pos_y+posr_y, pos_z+ posr_z, len_i, width_tentacle, precision_tentacles, squeeze));
 		}
 	}
-	stl_output_mesh(std::cout, folded_tentacle(pos_x + 0.7, pos_y + 0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 1));
-	stl_output_mesh(std::cout, folded_tentacle(pos_x + -0.7, pos_y + 0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 2));
-	stl_output_mesh(std::cout, folded_tentacle(pos_x + 0.7, pos_y + -0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 3));
-	stl_output_mesh(std::cout, folded_tentacle(pos_x + -0.7, pos_y + -0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 4));
+	povray_output_mesh(std::cout, folded_tentacle(pos_x + 0.7, pos_y + 0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 1));
+	povray_output_mesh(std::cout, folded_tentacle(pos_x + -0.7, pos_y + 0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 2));
+	povray_output_mesh(std::cout, folded_tentacle(pos_x + 0.7, pos_y + -0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 3));
+	povray_output_mesh(std::cout, folded_tentacle(pos_x + -0.7, pos_y + -0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 4));
 	return 0;
 }
 

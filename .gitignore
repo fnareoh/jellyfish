@@ -1,6 +1,7 @@
 /jellyfish
 *.png
 *.gif
+*.stl
 
 *.pov-state
 build
