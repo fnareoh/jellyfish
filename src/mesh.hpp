@@ -1,15 +1,12 @@
 #pragma once
 
+#include "points.hpp"
+
 #include <iomanip>
 #include <iostream>
+#include <map>
 #include <set>
 #include <tuple>
-
-
-/**
- * Reprensentation of a 3D point.
- */
-typedef std::tuple<double, double, double> Point3;
 
 
 /**
@@ -35,15 +32,19 @@ public:
     /** Adds a new triangle into the mesh */
     int insert(const Point3 a, const Point3 b, const Point3 c);
 
+    void recompute_normals();
+
     /** Output the mesh as a list of triangles */
     friend std::ostream& operator<<(std::ostream&, const Mesh&);
 
     /** Output the mesh for povray */
-    friend void stl_output_mesh(std::ostream&, const Mesh&);
+    friend void stl_output_mesh(std::ostream&, Mesh);
     friend void povray_output_mesh(std::ostream&, const Mesh&);
-    friend void povray_output_mesh2(std::ostream&, const Mesh&);
+    friend void povray_output_mesh2(std::ostream&, Mesh);
 
 private:
     std::set<Point3> points;
     std::set<MeshFace, MeshCmp> faces;
+    std::map<MeshFace, Point3, MeshCmp> face_normals;
+    std::map<Point3, Point3> node_normals;
 };

@@ -31,8 +31,10 @@ void povray_output_mesh(std::ostream& stream, const Mesh& mesh)
     stream << '}' << std::endl;
 }
 
-void povray_output_mesh2(std::ostream& stream, const Mesh& mesh)
+void povray_output_mesh2(std::ostream& stream, Mesh mesh)
 {
+    mesh.recompute_normals();
+
     stream << "mesh2 {" << std::endl;
 
     stream << "  vertex_vectors {" << std::endl;
@@ -50,6 +52,18 @@ void povray_output_mesh2(std::ostream& stream, const Mesh& mesh)
         point_index[point] = point_counter;
         point_counter++;
 
+        stream << std::setprecision(6) << '<' << x << ',' << y << ',' << z << "> ";
+    }
+
+    stream << std::endl << "  }" << std::endl;
+
+    // Output normals
+    stream << "  normal_vectors {" << std::endl;
+    stream << "    " << mesh.points.size() << "," << std::endl;
+
+    for (const Point3& point: mesh.points) {
+        double x, y, z;
+        std::tie(x, y, z) = mesh.node_normals[point];
         stream << std::setprecision(6) << '<' << x << ',' << y << ',' << z << "> ";
     }
 

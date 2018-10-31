@@ -63,6 +63,48 @@ int Mesh::insert(const Point3 a, const Point3 b, const Point3 c)
     return created_points_count;
 }
 
+void Mesh::recompute_normals()
+{
+    face_normals.clear();
+
+    for (const auto& face : faces) {
+        const auto& a = *std::get<0>(face);
+        const auto& b = *std::get<1>(face);
+        const auto& c = *std::get<2>(face);
+
+        double a1, a2, a3, b1, b2, b3, c1, c2, c3;
+        std::tie(a1, a2, a3) = a;
+        std::tie(b1, b2, b3) = b;
+        std::tie(c1, c2, c3) = c;
+
+        Point3 normal {
+            (b2-b1)*(c3-c1) - (b3-b1)*(c2-c1),
+            (c2-c1)*(a3-a1) - (a2-a1)*(c3-c1),
+            (a2-a1)*(b3-b1) - (a3-a1)*(b2-b1)
+        };
+
+        face_normals[face] = normalize(normal);
+    }
+
+    node_normals.clear();
+
+    for (Point3 point : points)
+        node_normals[point] = std::make_tuple(0, 0, 0);
+
+    for (auto face : faces) {
+        Point3 a = *std::get<0>(face);
+        Point3 b = *std::get<1>(face);
+        Point3 c = *std::get<2>(face);
+
+        node_normals[a] = sum(node_normals[a], face_normals[face]);
+        node_normals[b] = sum(node_normals[b], face_normals[face]);
+        node_normals[c] = sum(node_normals[c], face_normals[face]);
+    }
+
+    for (Point3 point : points)
+        node_normals[point] = normalize(node_normals[point]);
+}
+
 std::ostream& operator<<(std::ostream& stream, const Mesh& mesh)
 {
     stream << mesh.points.size() << " vertices" << std::endl;

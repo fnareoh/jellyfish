@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "mesh.hpp"
+#include "noise.hpp"
 #include "stl.hpp"
 
 # define PI           3.14159265358979323846
@@ -15,6 +16,7 @@
 Mesh sample_half_sphere(double pos_x, double pos_y, double pos_z,
 					 double r, double d_theta, double d_alpha,
 					 double squeeze){
+
 	Mesh mesh_half_sphere;
 	double nb_step_alpha = PI/(2*d_alpha);
 	for(int i=0; i*d_alpha < PI/2; i++){
@@ -62,7 +64,7 @@ Point3 ondulation(
 	double nb_step_alpha_i, double nb_step_alpha,
 	double step_alpha, double step_theta)
 {
-	Point3 a = {
+	Point3 a {
 		pos_x + r*squeeze_status*(1-pow((nb_step_alpha_i)/nb_step_alpha,4.0)*skirt_status)*cos(step_alpha)*cos(step_theta),
 		pos_y + r*squeeze_status*(1-pow((nb_step_alpha_i)/nb_step_alpha,4.0)*skirt_status)*cos(step_alpha)*sin(step_theta),
 		pos_z + 0.8*r*squeeze_status*(1-pow((nb_step_alpha_i)/nb_step_alpha,4.0)*skirt_status)*sin(step_alpha)
@@ -146,7 +148,7 @@ Mesh sinus_tentacle(double angle, double pos_x, double pos_y, double  pos_z, dou
 	double d_z = precision;
 	double omega = 0.9;
 	double ampl = 0.5;
-	double init = 0 - squeeze; //rand();
+	double init = 0 + 10*squeeze; //rand();
 	double real_length = len;
 	for(int i=0; i < real_length/d_z; i++){
 		for(int j=0; j*d_theta < 2*PI; j++){
@@ -191,7 +193,7 @@ Point3 tentacles_ondulation(
 	double squeeze_status, double skirt_status,
 	double step_alpha, double step_theta)
 {
-	Point3 a = {
+	Point3 a {
 		pos_x + r*(1-squeeze_status)*(1-skirt_status)*cos(step_theta),
 		pos_y + r*(1-squeeze_status)*(1-skirt_status)*sin(step_theta),
 		pos_z - step_alpha
@@ -263,7 +265,7 @@ void jellyfish_simple(double pos_x, double pos_y, double pos_z, double squeeze) 
 int jellyfish(double pos_x, double pos_y, double pos_z, double width_jelly, double width_tentacle, double squeeze){
 	double precision_body = PI/100;
 	double precision_tentacles = PI/30;
-	stl_output_mesh(std::cout, jelly_shape(pos_x,pos_y,pos_z, width_jelly, precision_body, squeeze));
+	povray_output_mesh2(std::cout, jelly_shape(pos_x,pos_y,pos_z, width_jelly, precision_body, squeeze));
 
 	double step = PI/12;
 	double step_r = 3.4*(1+squeeze);
@@ -276,17 +278,19 @@ int jellyfish(double pos_x, double pos_y, double pos_z, double width_jelly, doub
 			double posr_z = 0.1;
 			double len_i = len;
 			double angle = j*step;
-			stl_output_mesh(std::cout, sinus_tentacle(angle,pos_x+posr_x, pos_y+posr_y, pos_z+ posr_z, len_i, width_tentacle, precision_tentacles, squeeze));
+			povray_output_mesh2(std::cout, sinus_tentacle(angle,pos_x+posr_x, pos_y+posr_y, pos_z+ posr_z, len_i, width_tentacle, precision_tentacles, squeeze));
 		}
 	}
-	stl_output_mesh(std::cout, folded_tentacle(0.7, 0.7, 1, 6, 0.7, precision_tentacles, squeeze, 1));
-	stl_output_mesh(std::cout, folded_tentacle(-0.7, 0.7, 1, 6, 0.7, precision_tentacles, squeeze, 2));
-	stl_output_mesh(std::cout, folded_tentacle(0.7, -0.7, 1, 6, 0.7, precision_tentacles, squeeze, 3));
-	stl_output_mesh(std::cout, folded_tentacle(-0.7, -0.7, 1, 6, 0.7, precision_tentacles, squeeze, 4));
+	povray_output_mesh2(std::cout, folded_tentacle(pos_x + 0.7, pos_y + 0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 1));
+	povray_output_mesh2(std::cout, folded_tentacle(pos_x + -0.7, pos_y + 0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 2));
+	povray_output_mesh2(std::cout, folded_tentacle(pos_x + 0.7, pos_y + -0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 3));
+	povray_output_mesh2(std::cout, folded_tentacle(pos_x + -0.7, pos_y + -0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 4));
 	return 0;
 }
 
 int main(int argc, const char** argv) {
+    init_perlin(-100, 100, -100, 100);
+
     // Successive states of the jellyfish: y_position and squeeze
     std::vector<std::array<double, 2>> frame_states = {
         {0.0, -0.10}, // 0
@@ -341,5 +345,5 @@ int main(int argc, const char** argv) {
     // Render the jelly
     double z_position = frame_states[frame % nb_frames][0] + period_count * period_travel;
     double squeeze = frame_states[frame % nb_frames][1];
-    jellyfish(0, 0, z_position, 4, 0.05, -0.5);
+    jellyfish(0, 0, z_position, 4, 0.05, squeeze);
 }

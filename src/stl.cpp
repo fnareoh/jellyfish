@@ -18,12 +18,18 @@ void stl_face_output_mesh(std::ostream& stream, const MeshFace& face)
     stream << "    endloop" << std::endl;
 }
 
-void stl_output_mesh(std::ostream& stream, const Mesh& mesh)
+void stl_output_mesh(std::ostream& stream, Mesh mesh)
 {
+    mesh.recompute_normals();
+
     stream << "solid " << std::endl;
 
     for (const auto& face : mesh.faces) {
-        stream << "  facet " << std::endl;
+        double x, y, z;
+        std::tie(x, y, z) = mesh.face_normals[face];
+
+        stream << "  facet normal " << std::setprecision(6)
+               << x << ' ' << y << ' ' << z << std::endl;
         stl_face_output_mesh(stream, face);
         stream << "  endfacet" << std::endl;
     }
