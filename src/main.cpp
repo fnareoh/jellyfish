@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <vector>
 
 #include "noise.hpp"
@@ -46,14 +47,18 @@ int main(int argc, const char** argv) {
         frame_states[t][0] =\
             frame_states[t-1][0] + 0.05 +  0.2 * exp(-0.0495105 * t);
 
-    // Read the frame we want to render from stdin
+    // Parse parameters for main
     int frame = 0, seed = 0;
+    std::string format = "pov";
 
     if (argc > 1)
-        frame = std::atoi(argv[1]);
+        format = argv[1];
 
     if (argc > 2)
-        seed = std::atoi(argv[2]);
+        frame = std::atoi(argv[2]);
+
+    if (argc > 3)
+        seed = std::atoi(argv[3]);
 
     // Init perlin gradient
     init_perlin(100, 100, seed);
@@ -72,11 +77,19 @@ int main(int argc, const char** argv) {
     int period_count = frame / nb_frames;
 
     // Render the jelly
-    double z_position = frame_states[frame % nb_frames][0] + period_count * period_travel;
+    double z_position = \
+        frame_states[frame % nb_frames][0] + period_count * period_travel;
     double squeeze = frame_states[frame % nb_frames][1];
 
     std::vector<Mesh> jelly = jellyfish(0, 0, z_position, 4, 0.05, squeeze);
 
     for (Mesh& mesh : jelly)
-        povray_output_mesh2(std::cout, mesh);
+        if (format == "pov" || format == "pov_mesh2")
+            povray_output_mesh2(std::cout, mesh);
+        else if (format == "pov_mesh")
+            povray_output_mesh(std::cout, mesh);
+        else if (format == "stl")
+            stl_output_mesh(std::cout, mesh);
+        else
+            std::cerr << "Unknown file format" << std::endl;
 }

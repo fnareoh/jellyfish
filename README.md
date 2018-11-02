@@ -11,6 +11,30 @@ You can find a small overview of the evolution of the project [here](http://fnar
 # Usage
 
 ```bash
-# Render the final file `scene.png`
+# Render the final file `scene_frame_0.png`
 make scene
+
+# Make a quick rendering of the scene
+make fast
+
+# Make a slow rendering of the scene at higher resolution
+make fancy
+
+# Render the frame number i of the animation
+make FRAME=i scene
 ```
+
+You can also get the mesh as a standalone file:
+```
+FRAME=0  # frame to render (optional parameter)
+SEED=0   # seed for rng (optional parameter)
+
+make
+./jellyfish pov $FRAME $SEED > jelly.pov
+```
+
+Where first parameter is the file format among:
+ - pov/pov_mesh2: povray mesh2 format
+ - pov_mesh: povray mesh format
+ - stl
+

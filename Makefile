@@ -117,16 +117,16 @@ SCENE_INCS = mesh $(SCENE_DIR)/jellyfish_properties.inc $(SCENE_DIR)/scene.pov
 
 mesh: $(EXEC)
 	@mkdir -p $(SCENE_DIR)/build
-	./$(EXEC) $(FRAME) 0 > $(SCENE_DIR)/build/jellyfish0.inc
-	./$(EXEC) $(FRAME) 1 > $(SCENE_DIR)/build/jellyfish1.inc
-	./$(EXEC) $(FRAME) 2 > $(SCENE_DIR)/build/jellyfish2.inc
-	./$(EXEC) $(FRAME) 3 > $(SCENE_DIR)/build/jellyfish3.inc
-	./$(EXEC) $(FRAME) 4 > $(SCENE_DIR)/build/jellyfish4.inc
-	./$(EXEC) $(FRAME) 5 > $(SCENE_DIR)/build/jellyfish5.inc
-	./$(EXEC) $(FRAME) 6 > $(SCENE_DIR)/build/jellyfish6.inc
-	./$(EXEC) $(FRAME) 7 > $(SCENE_DIR)/build/jellyfish7.inc
-	./$(EXEC) $(FRAME) 8 > $(SCENE_DIR)/build/jellyfish8.inc
-	./$(EXEC) $(FRAME) 9 > $(SCENE_DIR)/build/jellyfish9.inc
+	./$(EXEC) pov $(FRAME) 0 > $(SCENE_DIR)/build/jellyfish0.inc
+	./$(EXEC) pov $(FRAME) 1 > $(SCENE_DIR)/build/jellyfish1.inc
+	./$(EXEC) pov $(FRAME) 2 > $(SCENE_DIR)/build/jellyfish2.inc
+	./$(EXEC) pov $(FRAME) 3 > $(SCENE_DIR)/build/jellyfish3.inc
+	./$(EXEC) pov $(FRAME) 4 > $(SCENE_DIR)/build/jellyfish4.inc
+	./$(EXEC) pov $(FRAME) 5 > $(SCENE_DIR)/build/jellyfish5.inc
+	./$(EXEC) pov $(FRAME) 6 > $(SCENE_DIR)/build/jellyfish6.inc
+	./$(EXEC) pov $(FRAME) 7 > $(SCENE_DIR)/build/jellyfish7.inc
+	./$(EXEC) pov $(FRAME) 8 > $(SCENE_DIR)/build/jellyfish8.inc
+	./$(EXEC) pov $(FRAME) 9 > $(SCENE_DIR)/build/jellyfish9.inc
 
 scene_frame_$(FRAME).png: mesh
 scene_frame_$(FRAME).png: $(SCENE_INCS)
