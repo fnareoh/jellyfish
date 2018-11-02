@@ -1,8 +1,10 @@
-#include <algorithm>
 #include <array>
+#include <algorithm>
+#include <chrono>
+#include <cmath>
 #include <iostream>
 #include <math.h>
-#include <cmath>
+#include <random>
 #include <vector>
 
 #include "mesh.hpp"
@@ -260,20 +262,20 @@ Mesh folded_tentacle(double pos_x, double pos_y, double  pos_z, double len, doub
 }
 
 void jellyfish_simple(double pos_x, double pos_y, double pos_z, double squeeze) {
-	povray_output_mesh2(std::cout, sample_half_sphere(pos_x,pos_y,pos_z,5, PI/100, PI/100, squeeze));
-	povray_output_mesh2(std::cout, simple_tentacle(7, 0.5, pos_x , pos_y , pos_z));
+	stl_output_mesh(std::cout, sample_half_sphere(pos_x,pos_y,pos_z,5, PI/100, PI/100, squeeze));
+	stl_output_mesh(std::cout, simple_tentacle(7, 0.5, pos_x , pos_y , pos_z));
 
-	povray_output_mesh2(std::cout, simple_tentacle(4, 0.5, pos_x + 1, pos_y + 1, pos_z));
-	povray_output_mesh2(std::cout, simple_tentacle(4, 0.5, pos_x - 1, pos_y + 1, pos_z));
-	povray_output_mesh2(std::cout, simple_tentacle(4, 0.5, pos_x + 1, pos_y - 1, pos_z));
-	povray_output_mesh2(std::cout, simple_tentacle(4, 0.5, pos_x - 1, pos_y - 1, pos_z));
+	stl_output_mesh(std::cout, simple_tentacle(4, 0.5, pos_x + 1, pos_y + 1, pos_z));
+	stl_output_mesh(std::cout, simple_tentacle(4, 0.5, pos_x - 1, pos_y + 1, pos_z));
+	stl_output_mesh(std::cout, simple_tentacle(4, 0.5, pos_x + 1, pos_y - 1, pos_z));
+	stl_output_mesh(std::cout, simple_tentacle(4, 0.5, pos_x - 1, pos_y - 1, pos_z));
 }
 
 
 int jellyfish(double pos_x, double pos_y, double pos_z, double width_jelly, double width_tentacle, double squeeze){
 	double precision_body = PI/100;
 	double precision_tentacles = PI/30;
-	povray_output_mesh(std::cout, jelly_shape(pos_x,pos_y,pos_z, width_jelly, precision_body, squeeze));
+	stl_output_mesh(std::cout, jelly_shape(pos_x,pos_y,pos_z, width_jelly, precision_body, squeeze));
 
 	double step = PI/12;
 	double step_r = 3.4*(1+squeeze);
@@ -286,19 +288,17 @@ int jellyfish(double pos_x, double pos_y, double pos_z, double width_jelly, doub
 			double posr_z = 0.1;
 			double len_i = len;
 			double angle = j*step;
-			povray_output_mesh(std::cout, sinus_tentacle(angle,pos_x+posr_x, pos_y+posr_y, pos_z+ posr_z, len_i, width_tentacle, precision_tentacles, squeeze));
+			stl_output_mesh(std::cout, sinus_tentacle(angle,pos_x+posr_x, pos_y+posr_y, pos_z+ posr_z, len_i, width_tentacle, precision_tentacles, squeeze));
 		}
 	}
-	povray_output_mesh(std::cout, folded_tentacle(pos_x + 0.7, pos_y + 0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 1));
-	povray_output_mesh(std::cout, folded_tentacle(pos_x + -0.7, pos_y + 0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 2));
-	povray_output_mesh(std::cout, folded_tentacle(pos_x + 0.7, pos_y + -0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 3));
-	povray_output_mesh(std::cout, folded_tentacle(pos_x + -0.7, pos_y + -0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 4));
+	stl_output_mesh(std::cout, folded_tentacle(pos_x + 0.7, pos_y + 0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 1));
+	stl_output_mesh(std::cout, folded_tentacle(pos_x + -0.7, pos_y + 0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 2));
+	stl_output_mesh(std::cout, folded_tentacle(pos_x + 0.7, pos_y + -0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 3));
+	stl_output_mesh(std::cout, folded_tentacle(pos_x + -0.7, pos_y + -0.7, pos_z + 1, 6, 0.7, precision_tentacles, squeeze, 4));
 	return 0;
 }
 
 int main(int argc, const char** argv) {
-    init_perlin(-100, 100, -100, 100);
-
     // Successive states of the jellyfish: y_position and squeeze
     std::vector<std::array<double, 2>> frame_states = {
         {0.0, -0.10}, // 0
@@ -340,10 +340,24 @@ int main(int argc, const char** argv) {
             frame_states[t-1][0] + 0.05 +  0.2 * exp(-0.0495105 * t);
 
     // Read the frame we want to render from stdin
-    int frame = 0;
+    int frame = 0, seed = 0;
 
     if (argc > 1)
         frame = std::atoi(argv[1]);
+
+    if (argc > 2)
+        seed = std::atoi(argv[2]);
+
+    // Init perlin gradient
+    init_perlin(100, 100, seed);
+
+    // Add a random offset to the frame
+    std::random_device rd;
+    std::default_random_engine gen(seed);
+    std::uniform_int_distribution<int> off_frame(0, 119);
+    off_frame(gen);
+
+    frame = frame + off_frame(gen);
 
     // Distance traveled by the jelly during one period
     double period_travel = frame_states[nb_frames - 1][0] - frame_states[0][0];

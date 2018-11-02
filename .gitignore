@@ -2,6 +2,7 @@
 *.png
 *.gif
 *.stl
+*.mp4
 
 *.pov-state
 build

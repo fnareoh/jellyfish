@@ -2,24 +2,21 @@
 
 
 std::vector<std::vector<std::vector<double>>> Gradient;
-int xmin, xmax, ymin, ymax;
 
-void init_perlin(double x_min, double x_max, double y_min, double y_max)
+
+void init_perlin(double x_max, double y_max, int seed)
 {
     extern std::vector<std::vector<std::vector<double>>> Gradient;
-    extern int xmin, xmax, ymin, ymax;
 
     std::random_device rd;
-    std::default_random_engine generator(0);
+    std::default_random_engine generator(seed);
     std::uniform_real_distribution<double> distribution(0, 1);
 
-    xmin = floor(x_min);
-    xmax = ceil(x_max);
-    ymin = floor(y_min);
-    ymax = ceil(y_max);
+    int xmax = ceil(x_max);
+    int ymax = ceil(y_max);
 
-    int xm = xmax - xmin + 1;
-    int ym = ymax - ymin + 1;
+    int xm = xmax + 1;
+    int ym = ymax + 1;
 
     Gradient = std::vector<std::vector<std::vector<double>>>(
         xm, std::vector<std::vector<double>>(
@@ -54,14 +51,13 @@ double dotGridGradient(int ix, int iy, double x, double y)
 
     // Precomputed (or otherwise) gradient vectors at each grid node
     extern std::vector<std::vector<std::vector<double>>> Gradient;
-    extern int xmin, ymin;
 
     // Compute the distance vector
     double dx = x - (double)ix;
     double dy = y - (double)iy;
 
     // Compute the dot-product
-    return (dx * Gradient[ix-xmin][iy-ymin][0] + dy * Gradient[ix-xmin][iy-ymin][1]);
+    return (dx * Gradient[ix][iy][0] + dy * Gradient[ix][iy][1]);
 }
 
 // Compute Perlin noise at coordinates x, y
