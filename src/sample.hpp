@@ -4,9 +4,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
-#include <iostream>
 #include <math.h>
-#include <random>
 #include <vector>
 
 #include "mesh.hpp"
@@ -49,8 +47,8 @@ Mesh folded_tentacle(double pos_x, double pos_y, double  pos_z,
 	double len, double width, double precision, double squeeze,
 	double in);
 
-void jellyfish_simple(double pos_x, double pos_y, double pos_z,
+std::vector<Mesh> jellyfish_simple(double pos_x, double pos_y, double pos_z,
 	double squeeze);
 
-int jellyfish(double pos_x, double pos_y, double pos_z, double width_jelly,
-	double width_tentacle, double squeeze);
+std::vector<Mesh> jellyfish(double pos_x, double pos_y, double pos_z,
+	double width_jelly, double width_tentacle, double squeeze);

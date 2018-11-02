@@ -74,5 +74,9 @@ int main(int argc, const char** argv) {
     // Render the jelly
     double z_position = frame_states[frame % nb_frames][0] + period_count * period_travel;
     double squeeze = frame_states[frame % nb_frames][1];
-    jellyfish(0, 0, z_position, 4, 0.05, squeeze);
+
+    std::vector<Mesh> jelly = jellyfish(0, 0, z_position, 4, 0.05, squeeze);
+
+    for (Mesh& mesh : jelly)
+        povray_output_mesh2(std::cout, mesh);
 }
