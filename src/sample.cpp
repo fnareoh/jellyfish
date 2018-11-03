@@ -258,11 +258,7 @@ Mesh folded_tentacle(double pos_x, double pos_y, double  pos_z, double len, doub
 
 
 std::vector<Mesh> jellyfish(double pos_x, double pos_y, double pos_z, double width_jelly, double width_tentacle, double squeeze){
-	double precision_body = PI/10;
-	double precision_tentacles = PI/30;
-
 	std::vector<Mesh> ret;
-
 	ret.push_back(jelly_shape(pos_x,pos_y,pos_z, width_jelly, PRECISION_BODY, squeeze));
 
 	double step = PI/12;

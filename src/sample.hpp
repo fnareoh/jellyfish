@@ -7,7 +7,7 @@
 #include <math.h>
 #include <vector>
 
-#include "constant.hpp"
+#include "constants.hpp"
 #include "mesh.hpp"
 #include "noise.hpp"
 #include "stl.hpp"
