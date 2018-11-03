@@ -7,11 +7,10 @@
 #include <math.h>
 #include <vector>
 
+#include "constant.hpp"
 #include "mesh.hpp"
 #include "noise.hpp"
 #include "stl.hpp"
-
-constexpr double PI = 3.14159265358979323846;
 
 
 Mesh sample_half_sphere(double pos_x, double pos_y, double pos_z,

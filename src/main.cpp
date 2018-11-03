@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 
+#include "constant.hpp"
 #include "noise.hpp"
 #include "sample.hpp"
 
@@ -81,7 +82,7 @@ int main(int argc, const char** argv) {
         frame_states[frame % nb_frames][0] + period_count * period_travel;
     double squeeze = frame_states[frame % nb_frames][1];
 
-    std::vector<Mesh> jelly = jellyfish(0, 0, z_position, 4, 0.05, squeeze);
+    std::vector<Mesh> jelly = jellyfish(0, 0, z_position, RADIUS_BODY, RADIUS_SINUS_TENTACLES, squeeze);
 
     for (Mesh& mesh : jelly)
         if (format == "pov" || format == "pov_mesh2")
